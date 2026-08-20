@@ -1,0 +1,30 @@
+# Local / machine-only (never publish in a public fork)
+config/project-adapters.local.yaml
+TEAM.md
+scripts/setup-team.sh
+scripts/install-team-command.sh
+commands/yonko-team-setup.md
+*.local.yaml
+*.local.yml
+
+# Runtime artefacts
+sessions/
+.yonko-sessions/
+workflow.lock
+workflow.error.txt
+*.pyc
+__pycache__/
+.DS_Store
+
+# Evaluation runtime outputs (keep directory placeholders)
+evals/results/**
+!evals/results/.gitkeep
+evals/cases/*.json
+!evals/cases/.gitkeep
+evals/escaped-defects/*.json
+!evals/escaped-defects/.gitkeep
+evals/manifests/*.jsonl
+improvements/candidates/*.json
+!improvements/candidates/.gitkeep
+scripts/lib/evaluation/__pycache__/
+scripts/evals/__pycache__/

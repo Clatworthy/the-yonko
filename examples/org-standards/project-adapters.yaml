@@ -1,0 +1,25 @@
+# Copy to config/project-adapters.local.yaml and edit for your company.
+# Point luffy.skills at YOUR engineering requirements (standards skill, rules,
+# ship/done policy, or internal review bot). That file is gitignored.
+
+version: 1
+
+adapters:
+  my-org:
+    detect:
+      # Tune these so Chair only enables Luffy in your real workspaces
+      workspace_markers:
+        - "README.md"
+      path_contains: "/my-org"
+    luffy:
+      enabled: true
+      skills:
+        - "${YONKO_PROJECT_ROOT}/path/to/your-engineering-standards/SKILL.md"
+      # optional:
+      # adversarial_rule: "${YONKO_PROJECT_ROOT}/path/to/attack-card-rules.mdc"
+    secrets:
+      exclude_names:
+        - ".env"
+        - ".env.local"
+      never_packet_patterns:
+        - "(?i)(password|secret|token|api[_-]?key)\\s*="

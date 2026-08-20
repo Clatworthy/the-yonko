@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko://contracts/evaluation/finding-adjudication",
+  "title": "finding-adjudication",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "finding_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "disposition": {
+      "enum": [
+        "accepted",
+        "accepted_as_sibling",
+        "merged",
+        "duplicate",
+        "downgraded",
+        "rejected_false",
+        "rejected_unsupported",
+        "rejected_out_of_scope",
+        "rejected_unreachable",
+        "rejected_pre_existing_not_worsened",
+        "verifier_inconclusive",
+        "chair_inconclusive",
+        "unknown_not_adjudicated"
+      ]
+    },
+    "seat": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "provenance": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "disposition"
+  ]
+}

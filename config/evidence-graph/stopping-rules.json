@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "continue_when": [
+    "public_contract_change",
+    "persisted_data_shape_change",
+    "event_produce_or_consume",
+    "remote_call",
+    "permission_or_claim_change",
+    "transaction_boundary_change",
+    "deployment_compatibility",
+    "material_side_effect",
+    "production_entry_reachability"
+  ],
+  "stop_when": [
+    "standard_library",
+    "unchanged_internal_utility",
+    "duplicate_evidence",
+    "outside_available_repositories",
+    "budget_or_depth_reached"
+  ],
+  "materiality_overrides_depth": true,
+  "stdlib_path_globs": [
+    "**/java/**",
+    "**/javax/**",
+    "**/jakarta/**",
+    "**/org/springframework/**",
+    "**/org/apache/**",
+    "**/com/fasterxml/**",
+    "**/kotlin/**",
+    "**/node_modules/**",
+    "**/.gradle/**",
+    "**/build/**"
+  ]
+}

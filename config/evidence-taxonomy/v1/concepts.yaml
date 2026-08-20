@@ -1,0 +1,23 @@
+# Controlled engineering concepts (taxonomy v1).
+version: "1.0.0"
+
+concepts:
+  - architecture
+  - contracts
+  - events
+  - database-migrations
+  - feature-flags
+  - permissions
+  - auth
+  - security
+  - performance
+  - concurrency
+  - caching
+  - deployment
+  - rollback
+  - observability
+  - testing
+  - customer-features
+  - api-versioning
+  - infrastructure
+  - external-integrations

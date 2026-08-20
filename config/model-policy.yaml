@@ -1,0 +1,72 @@
+# Model family selection - resolve from current Task allowlist each invoke.
+# Never hardcode version numbers in Chair prompts; rank live slugs.
+
+version: 1
+
+# Pro+ pool-aware defaults (measurement / high-volume Yonko):
+# - First-party pool: Composer + Grok (generous separate allowance)
+# - API pool: cheap OpenAI Luna + DeepSeek Flash when Cursor-hosted
+# Frontier Claude Opus / GPT Sol only on human request or Remand rematch.
+# Never BYOK for seats - Cursor-hosted allowlist only.
+
+# Chair (Zoro) is the parent agent - not selected from Task allowlist.
+# Prefer Composer (first-party) so Chair chat does not burn the API pool.
+chair:
+  persona: Zoro
+  role: "Final decision. Only writer. Docket, scripts, adjudication, apply/revise, bulletin."
+  task_seat: false
+  prefer: ["composer", "grok"]
+
+families:
+  shanks:
+    # OpenAI family - API pool. Default Luna after Jul 2026 price cut.
+    match: "(?i)gpt"
+    prefer: ["luna", "terra", "sol"]
+    rank_hints: ["medium", "fast", "high", "thinking"]
+  blackbeard:
+    # Correctness seat. Prefer Cursor-hosted DeepSeek when on the Task allowlist;
+    # else cheapest Claude (sonnet). Never silent Grok/Composer as Blackbeard.
+    match: "(?i)(deepseek|claude)"
+    prefer: ["deepseek", "flash", "sonnet", "fable", "opus"]
+    rank_hints: ["medium", "fast", "high", "thinking"]
+    required_family: true
+  buggy:
+    # First-party pool on Pro+ (with Composer) - prefer Grok.
+    match: "(?i)grok"
+    required: true
+    rank_hints: ["high", "thinking", "medium", "fast"]
+  luffy:
+    # Optional standards seat - adapter-gated.
+    # Hybrid Go panel uses Qwen via model-selections. Cursor profiles: prefer qwen, else composer.
+    adapter_gated: true
+    match: "(?i)(qwen|kimi|composer)"
+    rank_hints: ["medium", "fast", "high", "thinking"]
+    prefer_order:
+      - qwen
+      - composer
+      - kimi
+      - other_gpt_not_shanks
+      - other_claude_not_blackbeard
+      - shared_blackbeard_last_resort
+
+# Seat order when API pool is tight:
+# 1) Prefer first-party seats that are already routed (Buggy / Luffy-composer)
+# 2) Shanks on Luna; Blackbeard on DeepSeek if listed else Claude sonnet
+# 3) Fail closed if Blackbeard family (deepseek|claude) is entirely unavailable
+# Never label a non-matching seat as Blackbeard.
+
+# Escalation (human or Remand rematch only):
+# - Blackbeard → Claude opus + thinking/high (or keep DeepSeek if that is the seated family)
+# - Shanks → terra or sol + thinking/high (not Luna)
+# Announce the slug used each round. If preferred slug is absent from the Task
+# allowlist, pick the next prefer hit and say so in the roster (never invent slugs).
+
+# Seating baselines live in routing-policy.yaml (band_floor).
+# This file only selects model families for seats.
+
+# Attention biases only - never review boundaries
+lenses:
+  shanks: "contracts, compatibility, requirements, API shapes, auth boundaries"
+  blackbeard: "correctness, concurrency, retries, golden-path parity, side-effect leaves"
+  buggy: "operational chaos, unusual inputs, ticket-omitted failure cases"
+  luffy: "org / project engineering standards (from the matched project adapter)"

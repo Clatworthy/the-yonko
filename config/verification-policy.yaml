@@ -1,0 +1,48 @@
+# When to verify findings and how to run scoped checks.
+
+version: 1
+
+# Authoritative: which risk bands require verification evidence before pass.
+# Workflow legality and routing both read this list. Do not fork it elsewhere.
+require_verifier_bands:
+  - medium
+  - high
+  - critical
+
+adjudication_priority:
+  - deterministic_evidence
+  - verification
+  - grounding
+  - severity
+  - done_when
+  - project_policy
+
+# Reviewer agreement is corroboration only - never proof.
+voting:
+  role: corroboration_only
+  never_principal_decision: true
+
+verification:
+  trivial: none
+  low: none
+  medium: disputed_or_material
+  high: high_and_critical
+  critical: high_and_critical
+  group_related_findings: true
+  one_verifier_per_nit: false
+
+confidence:
+  allowed: ["low", "medium", "high"]
+  numeric_forbidden: true
+
+reject_finding_missing:
+  - evidence
+  - locus
+  - reachability
+  - impact
+
+scoped_verify:
+  backend_gradle: "./gradlew test --tests '<fqcn|pkg.**>'"
+  frontend_yarn: "yarn test <test-path>  # use repo's real script"
+  model_yaml: "skip + deploy-order note"
+  mid_loop_full_suite: false

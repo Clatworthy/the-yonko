@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko://contracts/evaluation/council-effectiveness",
+  "title": "council-effectiveness",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "totals": {
+      "type": "object"
+    },
+    "seats": {
+      "type": "array"
+    },
+    "sample_warning": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "session_id",
+    "totals",
+    "seats"
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko://contracts/evaluation/eval-case",
+  "title": "eval-case",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "case_id": {
+      "type": "string"
+    },
+    "source_session_id": {
+      "type": "string"
+    },
+    "packet_hash": {
+      "type": "string"
+    },
+    "creation_reason": {
+      "type": "string"
+    },
+    "approved_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "case_id",
+    "source_session_id",
+    "packet_hash",
+    "approved_by"
+  ]
+}

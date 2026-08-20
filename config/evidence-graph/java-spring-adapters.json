@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "annotations": {
+    "rest_controller": [
+      "@RestController",
+      "@Controller"
+    ],
+    "request_mapping": [
+      "@RequestMapping",
+      "@GetMapping",
+      "@PostMapping",
+      "@PutMapping",
+      "@PatchMapping",
+      "@DeleteMapping"
+    ],
+    "event_listener": [
+      "@EventListener",
+      "@TransactionalEventListener"
+    ],
+    "message_listener": [
+      "@RabbitListener",
+      "@KafkaListener",
+      "@SqsListener",
+      "@JmsListener"
+    ],
+    "scheduled": [
+      "@Scheduled"
+    ],
+    "security": [
+      "@PreAuthorize",
+      "@PostAuthorize",
+      "@Secured",
+      "@RolesAllowed"
+    ],
+    "transactional": [
+      "@Transactional"
+    ],
+    "retry": [
+      "@Retryable"
+    ],
+    "circuit_breaker": [
+      "@CircuitBreaker"
+    ],
+    "config_properties": [
+      "@ConfigurationProperties"
+    ],
+    "entity": [
+      "@Entity",
+      "@Table"
+    ],
+    "repository": [
+      "@Repository"
+    ],
+    "service": [
+      "@Service"
+    ],
+    "component": [
+      "@Component"
+    ]
+  },
+  "path_signals": {
+    "openapi": [
+      "(?i)openapi",
+      "(?i)\\.ya?ml$"
+    ],
+    "flyway": [
+      "(?i)db/migration",
+      "(?i)V[0-9]+__.*\\.sql$"
+    ],
+    "application_config": [
+      "(?i)application(-[a-z0-9]+)?\\.(yml|yaml|properties)$"
+    ],
+    "jooq": [
+      "(?i)jooq"
+    ],
+    "security_config": [
+      "(?i)SecurityFilterChain",
+      "(?i)WebSecurityConfig"
+    ]
+  }
+}

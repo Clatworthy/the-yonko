@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-outcome-axes.schema.json",
+  "title": "YonkoOutcomeAxes",
+  "description": "Three-axis end-of-run result. Never collapse to sole PASS/FAIL.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "review_outcome",
+    "evidence_completeness",
+    "deployment_recommendation"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "legacy_verdict": {
+      "type": "string",
+      "enum": ["pass", "remand", "deadlock", "adjourned"]
+    },
+    "review_outcome": {
+      "type": "string",
+      "enum": ["pass", "findings", "inconclusive"]
+    },
+    "evidence_completeness": {
+      "type": "string",
+      "enum": ["complete", "incomplete"]
+    },
+    "deployment_recommendation": {
+      "type": "string",
+      "enum": ["proceed", "proceed_with_caveat", "block"]
+    },
+    "clean_pass_allowed": { "type": "boolean" },
+    "presentation": {
+      "type": "object",
+      "properties": {
+        "headline": { "type": "string" },
+        "clean_pass_allowed": { "type": "boolean" },
+        "forbidden_sole_labels": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "blocking_categories": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "confidence_ceiling": {
+      "type": ["string", "null"],
+      "enum": ["low", "medium", "high", null]
+    },
+    "labels": { "type": "object" },
+    "incomplete_reasons": { "type": "array", "items": { "type": "string" } },
+    "note": { "type": "string" }
+  }
+}

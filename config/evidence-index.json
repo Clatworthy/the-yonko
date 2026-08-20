@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "enabled": true,
+  "evidence_repo": "",
+  "cache_root": "~/.cursor/yonko-evidence-cache",
+  "schema_version": "1.0.0",
+  "taxonomy_version": "1.0.0",
+  "scoring_version": "1.0.0",
+  "candidate": {
+    "dir_name": "evidence-candidate",
+    "require_finalize": true
+  },
+  "publication": {
+    "require_candidate_hash": true,
+    "require_human_approver": true,
+    "forbid_git_commit": true,
+    "forbid_git_push": true,
+    "forbid_remote": true
+  },
+  "allowed_artifacts": {
+    "plan": ["PLAN.approved.md"],
+    "document": {
+      "pap": ["PAP.final.md"],
+      "prd": ["PRD.final.md"],
+      "adr": ["ADR.final.md"],
+      "design": ["DESIGN.final.md"]
+    },
+    "implementation": ["final.patch"]
+  },
+  "exclude_files": [
+    "packet.md",
+    "DOCKET.md",
+    "bulletins.md",
+    "CHANGELOG.md",
+    "events.jsonl",
+    "*.raw.json"
+  ],
+  "retrieval": {
+    "min_score": 3.0,
+    "weights": {
+      "api": 5.0,
+      "event": 5.0,
+      "database_table": 5.0,
+      "contract": 5.0,
+      "repository": 3.0,
+      "service": 3.0,
+      "concept": 2.0,
+      "technology": 2.0,
+      "architectural_pattern": 2.0,
+      "artifact_type": 1.0,
+      "finding_pattern": 2.0
+    },
+    "strong_fields": ["api", "event", "database_table", "contract"],
+    "min_concept_overlap": 2
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-routing.schema.json",
+  "title": "YonkoRouting",
+  "description": "Deterministic reviewer seating decision for V3.5. Seats are existing council ids only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_version",
+    "policy_hash",
+    "risk_band",
+    "seats",
+    "require_verifier",
+    "reasons",
+    "padded_from_band",
+    "focus_hints",
+    "luffy_available",
+    "luffy_omitted"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "policy_version": { "type": "integer", "minimum": 1 },
+    "policy_hash": { "type": "string", "minLength": 8 },
+    "risk_band": {
+      "type": "string",
+      "enum": ["trivial", "low", "medium", "high", "critical"]
+    },
+    "seats": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/seatId" },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "require_verifier": { "type": "boolean" },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["seat", "reason", "source"],
+        "properties": {
+          "seat": { "$ref": "#/$defs/seatId" },
+          "reason": { "type": "string", "minLength": 1 },
+          "source": {
+            "type": "string",
+            "enum": ["class", "band_baseline", "band_pad", "advisory"]
+          },
+          "class": { "type": "string" }
+        }
+      }
+    },
+    "padded_from_band": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/seatId" }
+    },
+    "focus_hints": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      }
+    },
+    "luffy_available": { "type": "boolean" },
+    "luffy_omitted": { "type": "boolean" },
+    "classes_applied": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "band_floor": { "type": "integer", "minimum": 1 },
+    "effective_floor": { "type": "integer", "minimum": 1 }
+  },
+  "$defs": {
+    "seatId": {
+      "type": "string",
+      "enum": ["shanks", "blackbeard", "buggy", "luffy"]
+    }
+  }
+}

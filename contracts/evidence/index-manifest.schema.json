@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-evidence-index-manifest.schema.json",
+  "title": "YonkoEvidenceIndexManifest",
+  "description": "Deterministic rebuild manifest for inverted indexes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "built_at",
+    "record_count",
+    "taxonomy_version",
+    "index_hash",
+    "indexes"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "built_at": { "type": "string" },
+    "record_count": { "type": "integer", "minimum": 0 },
+    "taxonomy_version": { "type": "string" },
+    "scoring_version": { "type": "string" },
+    "index_hash": { "type": "string", "minLength": 64, "maxLength": 64 },
+    "indexes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["path", "sha256", "entry_count"],
+        "properties": {
+          "path": { "type": "string" },
+          "sha256": { "type": "string" },
+          "entry_count": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "record_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

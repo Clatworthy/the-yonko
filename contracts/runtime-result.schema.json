@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-runtime-result.schema.json",
+  "title": "YonkoRuntimeResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "seat",
+    "runtime",
+    "model_configured",
+    "completed",
+    "schema_valid",
+    "attempts",
+    "fallback_occurred",
+    "skipped_by_routing"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "seat": { "type": "string" },
+    "runtime": { "type": "string" },
+    "model_configured": { "type": "string" },
+    "model_resolved": { "type": ["string", "null"] },
+    "model_actual": { "type": ["string", "null"] },
+    "completed": { "type": "boolean" },
+    "awaiting_chair_dispatch": { "type": "boolean" },
+    "exit_status": { "type": ["integer", "null"] },
+    "duration_ms": { "type": ["integer", "null"] },
+    "started_at": { "type": ["string", "null"] },
+    "ended_at": { "type": ["string", "null"] },
+    "attempts": { "type": "integer", "minimum": 0 },
+    "schema_valid": { "type": "boolean" },
+    "timeout": { "type": "boolean" },
+    "failure_category": {
+      "type": ["string", "null"],
+      "enum": [
+        null,
+        "runtime_not_installed",
+        "authentication_missing",
+        "model_unavailable",
+        "invalid_profile",
+        "invalid_model_mapping",
+        "timeout",
+        "process_failure",
+        "malformed_output",
+        "schema_validation_failure",
+        "permission_violation",
+        "exploration_budget_exceeded",
+        "rate_limited",
+        "provider_unavailable",
+        "unknown_runtime_error",
+        "repository_modified"
+      ]
+    },
+    "failure_message": { "type": ["string", "null"] },
+    "output_path": { "type": ["string", "null"] },
+    "raw_log_path": { "type": ["string", "null"] },
+    "stderr_log_path": { "type": ["string", "null"] },
+    "dispatch_path": { "type": ["string", "null"] },
+    "repository_exploration_path": { "type": ["string", "null"] },
+    "execute_in_progress": { "type": "boolean" },
+    "fallback_occurred": { "type": "boolean" },
+    "skipped_by_routing": { "type": "boolean" },
+    "usage": {
+      "type": ["object", "null"],
+      "additionalProperties": true
+    },
+    "prompt": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "properties": {
+        "promptFormatVersion": { "type": ["integer", "null"] },
+        "sharedPrefixHash": { "type": ["string", "null"] },
+        "fullPromptHash": { "type": ["string", "null"] },
+        "sharedPrefixBytes": { "type": ["integer", "null"] },
+        "fullPromptBytes": { "type": ["integer", "null"] },
+        "cacheMetricsAvailable": { "type": ["boolean", "null"] },
+        "cacheReadTokens": { "type": ["number", "null"] },
+        "cacheWriteTokens": { "type": ["number", "null"] },
+        "cacheHit": { "type": ["boolean", "null"] },
+        "providerCacheKey": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

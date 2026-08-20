@@ -1,0 +1,118 @@
+# Document adapters (V3). Review checklists per artifact type.
+#
+# Adapters guide ATTENTION and define required sections.
+# They do NOT divide responsibility: every reviewer assesses the entire artifact.
+
+version: 1
+
+common:
+  every_reviewer_reads_whole_artifact: true
+  lenses_are_attention_bias_only: true
+  may_inspect_repositories: true
+  may_modify_production_code: false
+  chair_owns_final_revision: true
+  decision_log_required: true
+
+artifacts:
+  pap:
+    name: "Platform Architecture Proposal"
+    output: PAP.final.md
+    review_for:
+      - accuracy of current-state architecture
+      - clarity and evidence of the problem
+      - genuine comparison of alternatives
+      - service boundaries and ownership
+      - APIs, contracts, events and data flows
+      - failure modes
+      - migration strategy
+      - rollout and rollback
+      - deployment order
+      - unresolved decisions
+      - implementation readiness
+    expected_sections:
+      - problem and evidence
+      - current state
+      - proposed architecture
+      - alternatives considered
+      - contracts and data flow
+      - failure modes
+      - migration and deploy order
+      - rollout and rollback
+      - open decisions
+
+  prd:
+    name: "Product Requirements Document"
+    output: PRD.final.md
+    review_for:
+      - problem and user clarity
+      - business outcome
+      - scope and non-goals
+      - testable requirements
+      - success measures
+      - dependencies and constraints
+      - edge cases and failure experience
+      - feasibility
+      - accidental over-prescription of implementation
+      - consistency across product, engineering and QA interpretations
+    expected_sections:
+      - problem and users
+      - business outcome
+      - scope and non-goals
+      - requirements
+      - success measures
+      - dependencies and constraints
+      - edge cases
+      - open questions
+
+  adr:
+    name: "Architecture Decision Record"
+    output: ADR.final.md
+    review_for:
+      - decision context
+      - alternatives
+      - trade-offs
+      - rationale
+      - consequences
+      - reversibility
+      - assumptions
+      - future constraints
+    expected_sections:
+      - context
+      - decision
+      - alternatives
+      - consequences
+      - reversibility
+      - assumptions
+
+  design:
+    name: "Technical Design Document"
+    output: DESIGN.final.md
+    review_for:
+      - technical correctness
+      - completeness
+      - architecture and boundaries
+      - contracts and data flow
+      - failure behaviour
+      - security and performance
+      - testing
+      - observability
+      - migration, rollout and rollback
+      - implementability
+    expected_sections:
+      - goal and scope
+      - architecture and boundaries
+      - contracts and data flow
+      - failure behaviour
+      - security and performance
+      - testing strategy
+      - observability
+      - migration, rollout and rollback
+      - open questions
+
+chair_output_sections:
+  - decisions made
+  - assumptions
+  - open questions
+  - rejected findings
+  - remaining risks
+  - engineering confidence in the document

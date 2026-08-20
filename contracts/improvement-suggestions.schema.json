@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-improvement-suggestions.schema.json",
+  "title": "YonkoImprovementSuggestions",
+  "description": "Suggest-only continuous improvement report. Never mutates protocol.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at",
+    "window_reviews",
+    "records_scanned",
+    "min_occurrences",
+    "suggestions",
+    "below_threshold",
+    "mutates_protocol": false
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "generated_at": { "type": "string", "minLength": 1 },
+    "window_reviews": { "type": "integer", "minimum": 1 },
+    "records_scanned": { "type": "integer", "minimum": 0 },
+    "min_occurrences": { "type": "integer", "minimum": 1 },
+    "evidence_repo": { "type": ["string", "null"] },
+    "mutates_protocol": { "type": "boolean", "const": false },
+    "suggestions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/suggestion" }
+    },
+    "below_threshold": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/patternStat" }
+    }
+  },
+  "$defs": {
+    "patternStat": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pattern_key", "group_by", "count", "evidence_ids", "example_titles"],
+      "properties": {
+        "pattern_key": { "type": "string", "minLength": 1 },
+        "group_by": { "type": "string", "enum": ["finding_pattern", "category"] },
+        "count": { "type": "integer", "minimum": 1 },
+        "evidence_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "example_titles": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "severities": {
+          "type": "object",
+          "additionalProperties": { "type": "integer" }
+        }
+      }
+    },
+    "suggestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "pattern_key",
+        "group_by",
+        "count",
+        "window",
+        "classification",
+        "title",
+        "body",
+        "evidence_ids",
+        "human_decision_required"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "pattern_key": { "type": "string" },
+        "group_by": { "type": "string" },
+        "count": { "type": "integer" },
+        "window": { "type": "integer" },
+        "classification": {
+          "type": "string",
+          "enum": ["process_signal", "isolated"]
+        },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "evidence_ids": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "example_titles": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "human_decision_required": { "type": "boolean", "const": true },
+        "forbidden_actions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

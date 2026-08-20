@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-evidence-completeness.schema.json",
+  "title": "YonkoEvidenceCompleteness",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "risk_band",
+    "categories",
+    "blocks_seating",
+    "blocks_complete_verdict",
+    "ok_for_seating",
+    "waiver"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "risk_band": { "type": "string" },
+    "categories": {
+      "type": "array",
+      "minItems": 15,
+      "items": {
+        "type": "object",
+        "required": ["category", "status", "reason", "blocksSeating", "blocksCompleteVerdict"],
+        "properties": {
+          "category": { "type": "string" },
+          "status": { "type": "string", "enum": ["covered", "not_applicable", "unresolved"] },
+          "reason": { "type": "string" },
+          "discovery_method": { "type": "string" },
+          "confidence": { "type": "string" },
+          "evidence_refs": { "type": "array", "items": { "type": "string" } },
+          "missing_evidence": { "type": "array", "items": { "type": "string" } },
+          "blocksSeating": { "type": "boolean" },
+          "blocksCompleteVerdict": { "type": "boolean" },
+          "unresolved_details": { "type": "string" }
+        }
+      }
+    },
+    "blocks_seating": { "type": "boolean" },
+    "blocks_complete_verdict": { "type": "boolean" },
+    "evidence_completeness": {
+      "type": "string",
+      "enum": ["complete", "incomplete"],
+      "description": "Independent of defect findings. incomplete ≠ review failure."
+    },
+    "ok_for_seating": { "type": "boolean" },
+    "waiver": {
+      "type": "object",
+      "properties": {
+        "used": { "type": "boolean" },
+        "reason": { "type": "string" },
+        "approved_by": { "type": "string" }
+      }
+    },
+    "unresolved_edges_material": { "type": "array", "items": { "type": "object" } },
+    "note": { "type": "string" }
+  }
+}

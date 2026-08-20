@@ -1,0 +1,24 @@
+# Evaluation corpus paths and thresholds only.
+# capture_on_finalize / fail_open live in observability-policy.yaml (sole owner).
+# Hard-code: promotion is human-gated via promote-case.sh only.
+# Do not add auto-promote or CI-gate configuration keys.
+
+version: 1
+
+paths:
+  cases: evals/cases
+  manifests: evals/manifests
+  results: evals/results
+  escaped_defects: evals/escaped-defects
+  proposals: improvements/candidates
+  measurement_index: "~/.cursor/yonko-sessions/_rollup/measurement-index.jsonl"
+
+min_sample_n: 10
+
+retention:
+  eval_runs_days: 90
+  candidates_keep: 200
+
+replay:
+  default_mode: frozen_packet
+  forbid_set_execution_profile: true

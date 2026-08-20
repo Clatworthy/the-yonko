@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-evidence-record.schema.json",
+  "title": "YonkoEvidenceRecord",
+  "description": "Structured engineering evidence record. No chain-of-thought, chat, or secrets.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "activity_id",
+    "session_id",
+    "review_type",
+    "lifecycle",
+    "final_status",
+    "completed_at",
+    "owner",
+    "tickets",
+    "concepts",
+    "findings",
+    "engineering_confidence",
+    "source_evidence",
+    "artifacts",
+    "record_hash"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "evidence_id": { "type": "string", "minLength": 1 },
+    "activity_id": { "type": "string", "minLength": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "review_type": {
+      "type": "string",
+      "enum": ["implementation", "plan", "document"]
+    },
+    "artifact_type": {
+      "type": ["string", "null"],
+      "enum": ["pap", "prd", "adr", "design", null]
+    },
+    "document_mode": {
+      "type": ["string", "null"],
+      "enum": ["create", "review", null]
+    },
+    "lifecycle": {
+      "type": "string",
+      "enum": ["candidate", "canonical", "superseded"]
+    },
+    "final_status": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "rejected",
+        "abandoned",
+        "rolled_back",
+        "merged",
+        "shipped",
+        "pass",
+        "remand",
+        "deadlock",
+        "adjourned",
+        "other"
+      ]
+    },
+    "completed_at": { "type": "string", "minLength": 1 },
+    "owner": { "type": "string", "minLength": 1 },
+    "tickets": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "title": { "type": "string" },
+    "summary": { "type": "string" },
+    "repositories": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "services": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "apis": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "events": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "database_tables": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "technologies": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "architectural_patterns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "external_integrations": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "contracts": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "concepts": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/derivedValue" }
+    },
+    "risk": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "band": {
+          "type": "string",
+          "enum": ["trivial", "low", "medium", "high", "critical"]
+        },
+        "basis": { "type": "string" },
+        "reasons": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "deployment_type": {
+      "type": ["string", "null"],
+      "enum": [
+        "none",
+        "single-service",
+        "multi-service",
+        "two-phase",
+        "feature-flag",
+        "migration",
+        "manual",
+        "other",
+        null
+      ]
+    },
+    "commit_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "merge_request_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "reviewers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["shanks", "blackbeard", "buggy", "luffy", "chair", "verifier"]
+      }
+    },
+    "findings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accepted", "validated", "rejected", "unresolved"],
+      "properties": {
+        "accepted": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/indexedFinding" }
+        },
+        "validated": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/indexedFinding" }
+        },
+        "rejected": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/indexedFinding" }
+        },
+        "unresolved": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/indexedFinding" }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "rollout_strategy": { "type": ["string", "null"] },
+    "rollback_strategy": { "type": ["string", "null"] },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "unresolved_risks": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "engineering_confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["level"],
+      "properties": {
+        "level": { "type": "string", "enum": ["high", "medium", "low"] },
+        "source": { "type": "string" },
+        "mechanical": { "type": "object" },
+        "chair_reasons": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "source_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["session_path_relative", "packet_hash"],
+      "properties": {
+        "session_path_relative": { "type": "string" },
+        "packet_hash": { "type": ["string", "null"] },
+        "packet_version": { "type": ["integer", "null"] },
+        "risk_file": { "type": ["string", "null"] },
+        "findings_file_hash": { "type": ["string", "null"] },
+        "verification_file_hash": { "type": ["string", "null"] }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "sha256", "bytes"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "role": {
+            "type": "string",
+            "enum": [
+              "plan_approved",
+              "document_final",
+              "final_patch",
+              "other"
+            ]
+          },
+          "sha256": { "type": "string", "minLength": 64, "maxLength": 64 },
+          "bytes": { "type": "integer", "minimum": 0 },
+          "path": { "type": "string" }
+        }
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "target_evidence_id"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "plans",
+              "implements",
+              "reviews",
+              "informed_by",
+              "supersedes",
+              "rolls_back",
+              "contradicts",
+              "related_to"
+            ]
+          },
+          "target_evidence_id": { "type": "string", "minLength": 1 },
+          "note": { "type": "string" }
+        }
+      }
+    },
+    "informed_by": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "taxonomy_version": { "type": "string" },
+    "human_publication": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "approved_by": { "type": "string" },
+        "approved_at": { "type": "string" },
+        "candidate_hash": { "type": "string" },
+        "note": { "type": "string" }
+      }
+    },
+    "record_hash": { "type": "string", "minLength": 64, "maxLength": 64 }
+  },
+  "$defs": {
+    "derivedValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "derivation", "rule_version"],
+      "properties": {
+        "value": { "type": "string", "minLength": 1 },
+        "derivation": {
+          "type": "string",
+          "enum": [
+            "explicit",
+            "path_rule",
+            "finding_category",
+            "contract_reference",
+            "human_confirmed"
+          ]
+        },
+        "source_reference": { "type": "string" },
+        "rule_version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "indexedFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "category", "severity", "title"],
+      "properties": {
+        "id": { "type": "string" },
+        "reviewer": { "type": "string" },
+        "category": { "type": "string" },
+        "severity": { "type": "string" },
+        "title": { "type": "string" },
+        "claim": { "type": "string" },
+        "verification": {
+          "type": ["string", "null"],
+          "enum": ["confirmed", "rejected", "inconclusive", null]
+        },
+        "finding_pattern": { "type": ["string", "null"] },
+        "locus_repository": { "type": ["string", "null"] },
+        "locus_path": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

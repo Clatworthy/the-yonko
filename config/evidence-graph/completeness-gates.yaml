@@ -1,0 +1,91 @@
+version: 1
+
+# Consumes evidence/risk.json (or scope-risk.json) band. Does not reclassify risk.
+
+defaults:
+  blocksSeating: false
+  blocksCompleteVerdict: false
+
+# Per-band overrides when a category is unresolved with required_for_complete_review.
+band_rules:
+  trivial:
+    unresolved_cross_repository_consumers:
+      blocksSeating: false
+      blocksCompleteVerdict: false
+    unresolved_persistence:
+      blocksSeating: false
+      blocksCompleteVerdict: false
+  low:
+    unresolved_cross_repository_consumers:
+      blocksSeating: false
+      blocksCompleteVerdict: false
+    unresolved_security_and_permissions:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+  medium:
+    unresolved_cross_repository_consumers:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+    unresolved_operational_side_effects:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+    unresolved_persistence:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+    unresolved_security_and_permissions:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+    unresolved_contracts:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+  high:
+    unresolved_cross_repository_consumers:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+    unresolved_operational_side_effects:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+    unresolved_persistence:
+      blocksSeating: true
+      blocksCompleteVerdict: true
+    unresolved_security_and_permissions:
+      blocksSeating: true
+      blocksCompleteVerdict: true
+    unresolved_contracts:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+    unresolved_deployment_and_compatibility:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+  critical:
+    unresolved_cross_repository_consumers:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+    unresolved_operational_side_effects:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+    unresolved_persistence:
+      blocksSeating: true
+      blocksCompleteVerdict: true
+    unresolved_security_and_permissions:
+      blocksSeating: true
+      blocksCompleteVerdict: true
+    unresolved_contracts:
+      blocksSeating: true
+      blocksCompleteVerdict: true
+    unresolved_deployment_and_compatibility:
+      blocksSeating: true
+      blocksCompleteVerdict: true
+    unresolved_events_and_messages:
+      blocksSeating: false
+      blocksCompleteVerdict: true
+
+# Categories that are material when touched by the diff (change classes / path signals).
+material_when_touched:
+  - contracts
+  - persistence
+  - security_and_permissions
+  - events_and_messages
+  - deployment_and_compatibility
+  - cross_repository_consumers
+  - operational_side_effects

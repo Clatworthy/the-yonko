@@ -1,0 +1,81 @@
+# Deterministic risk signals for classify-risk.sh
+# Band is heuristic routing data, not a precision score.
+# reviewers / maximum_subagent_calls = budget hints only.
+# Authoritative seating floors: routing-policy.yaml band_floor.
+# Authoritative verify bands: verification-policy.yaml require_verifier_bands.
+
+version: 1
+
+bands:
+  trivial:
+    maximum_subagent_calls: 1
+    reviewers: 1
+    plan: false
+    verify_material: false
+  low:
+    maximum_subagent_calls: 2
+    reviewers: 2
+    plan: false
+    verify_material: false
+  medium:
+    maximum_subagent_calls: 5
+    reviewers: 3
+    plan: optional
+    verify_material: disputed_or_material
+  high:
+    maximum_subagent_calls: 10
+    reviewers: 4
+    plan: required
+    verify_material: high_and_critical
+  critical:
+    maximum_subagent_calls: 12
+    reviewers: 4
+    plan: required
+    verify_material: high_and_critical
+    optional_blind: true
+
+# Path / content regexes (case-insensitive). First matching raise wins upward.
+signals:
+  critical:
+    - reason: "authorisation or auth middleware path changed"
+      path: "(?i)(@PreAuthorize|auth0|\\boauth\\b|authori[sz]ation|authentication|\\brbac\\b|\\bjwt\\b|AuthMiddleware|permission.?check|features/auth|/auth/|middleware[^/\\n]*auth|auth[^/\\n]*middleware)"
+    - reason: "money / billing / invoice mutation path changed"
+      path: "(?i)(\\bbilling\\b|(?<![A-Za-z])invoices?(?![A-Za-z])|\\bpayments?\\b|credit.?notes?|\\bwallets?\\b|\\brefunds?\\b)"
+    - reason: "customer isolation / tenancy boundary changed"
+      path: "(?i)(customer.?id|\\btenant(?:Id|_id)?\\b|\\btenancy\\b|multi.?tenant|data.?isolation|cross.?customer)"
+    - reason: "destructive data operation (hard/soft delete or cascade)"
+      path: "(?i)(hard.?delete|soft.?delete|\\bCASCADE\\b|ON DELETE CASCADE|drop (table|column)|truncate)"
+  high:
+    - reason: "public API / OpenAPI contract changed"
+      path: "(?i)(openapi|\\bswagger\\b|GraphQL|openapi-configurations|api\\.ya?ml)"
+    - reason: "database migration present"
+      path: "(?i)(flyway|liquibase|V[0-9]+__|/db/migration|schema\\.sql)"
+    - reason: "multiple repositories affected"
+      meta: multi_repo
+    - reason: "SQS/SNS/async side-effect path changed"
+      path: "(?i)(\\bsqs\\b|\\bsns\\b|\\bkafka\\b|enqueue|\\bwebhook\\b|outbox|@SqsListener)"
+  medium:
+    - reason: "service or frontend source changed beyond trivial size"
+      meta: lines_gte
+      value: 80
+    - reason: "tests and production code both changed"
+      meta: prod_and_test
+  low:
+    - reason: "small source change"
+      meta: lines_lt
+      value: 80
+  trivial:
+    - reason: "docs/config-only or tiny diff"
+      meta: docs_or_tiny
+      value: 20
+
+# Forced minimum band when these reasons fire (quick mode cannot go below)
+safety_floor:
+  - critical
+  - high
+
+quick_mode_cannot_bypass:
+  - authorisation or auth middleware path changed
+  - money / billing / invoice mutation path changed
+  - customer isolation / tenancy boundary changed
+  - destructive data operation (hard/soft delete or cascade)

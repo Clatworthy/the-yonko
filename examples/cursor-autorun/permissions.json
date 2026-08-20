@@ -1,0 +1,14 @@
+{
+  "autoRun": {
+    "allow_instructions": [
+      "Allow Yonko harness scripts under ~/.cursor/skills/the-yonko/scripts/ without asking.",
+      "Allow writes under ~/.cursor/yonko-sessions/ for Yonko sessions.",
+      "Allow read-only git status/diff/log/rev-parse/branch/show used by Yonko."
+    ],
+    "block_instructions": [
+      "Still ask before git push, force-push, or rewriting published history.",
+      "Still ask before sourcing workspace secret env files or printing secrets, tokens, or passwords.",
+      "Still ask before recursive deletes outside Yonko session directories."
+    ]
+  }
+}

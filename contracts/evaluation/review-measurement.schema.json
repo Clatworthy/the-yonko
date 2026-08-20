@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko://contracts/evaluation/review-measurement",
+  "title": "review-measurement",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "adjudication_state": {
+      "type": "string"
+    },
+    "packet_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "outcome_axes": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "findings": {
+      "type": "object"
+    },
+    "seats": {
+      "type": "array"
+    },
+    "flags": {
+      "type": "array"
+    },
+    "path_quality": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "session_id",
+    "adjudication_state"
+  ]
+}

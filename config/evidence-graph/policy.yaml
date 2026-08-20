@@ -1,0 +1,53 @@
+# Evidence Graph v1 - budgets and band-aware depth (consumes risk.json; does not classify)
+version: 1
+
+schema_version: "1"
+
+budgets:
+  max_changed_symbols: 80
+  max_nodes: 400
+  max_edges: 800
+  max_paths: 40
+  max_unresolved: 100
+  max_rg_hits_per_symbol: 40
+  max_file_bytes_read: 400000
+
+depth_by_band:
+  trivial:
+    upstream_hops: 1
+    downstream_hops: 1
+  low:
+    upstream_hops: 1
+    downstream_hops: 1
+  medium:
+    upstream_hops: 2
+    downstream_hops: 2
+  high:
+    upstream_hops: 3
+    downstream_hops: 3
+  critical:
+    upstream_hops: 4
+    downstream_hops: 4
+
+# Implementation review requires graph before packet pin unless waived.
+require_graph:
+  implementation: true
+  plan: false
+  document: false
+
+categories:
+  - changed_symbols
+  - upstream_entry_points
+  - inbound_callers
+  - outbound_dependencies
+  - framework_reachability
+  - contracts
+  - persistence
+  - events_and_messages
+  - remote_services
+  - security_and_permissions
+  - configuration
+  - deployment_and_compatibility
+  - tests
+  - cross_repository_consumers
+  - operational_side_effects

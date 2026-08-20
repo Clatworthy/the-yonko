@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-evidence-graph.schema.json",
+  "title": "YonkoEvidenceGraph",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generated_at",
+    "risk_band",
+    "changed_symbols",
+    "nodes",
+    "edges",
+    "paths",
+    "unresolved_edges",
+    "categories",
+    "metrics"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "generated_at": { "type": "string" },
+    "risk_band": {
+      "type": "string",
+      "enum": ["trivial", "low", "medium", "high", "critical", "unknown"]
+    },
+    "review_type": { "type": "string" },
+    "changed_symbols": { "type": "array", "items": { "type": "object" } },
+    "nodes": { "type": "array", "items": { "type": "object" } },
+    "edges": { "type": "array", "items": { "type": "object" } },
+    "paths": { "type": "array", "items": { "type": "object" } },
+    "unresolved_edges": { "type": "array", "items": { "type": "object" } },
+    "categories": { "type": "object" },
+    "behaviour_coverage": { "type": "object" },
+    "metrics": { "type": "object" },
+    "collectors": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "array", "items": { "type": "string" } }
+  }
+}

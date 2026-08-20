@@ -1,0 +1,41 @@
+schema_version: 1
+live_review_mode: packet_plus_workspace_read
+replay_modes:
+  frozen_packet: packet_only
+  full_pipeline: packet_plus_workspace_read
+workspace_root_candidates: []
+deny_globs:
+  - "**/.env"
+  - "**/.env.*"
+  - "**/credentials.json"
+  - "**/id_rsa"
+  - "**/*.pem"
+  - "**/node_modules/**"
+  - "**/build/**"
+  - "**/dist/**"
+budgets:
+  trivial: &low
+    max_files_read: 10
+    max_searches: 8
+    max_lsp_queries: 8
+    max_extra_bytes: 150000
+    max_duration_seconds: 90
+  low: *low
+  medium:
+    max_files_read: 25
+    max_searches: 15
+    max_lsp_queries: 15
+    max_extra_bytes: 350000
+    max_duration_seconds: 150
+  high:
+    max_files_read: 40
+    max_searches: 20
+    max_lsp_queries: 20
+    max_extra_bytes: 500000
+    max_duration_seconds: 240
+  critical:
+    max_files_read: 60
+    max_searches: 30
+    max_lsp_queries: 30
+    max_extra_bytes: 750000
+    max_duration_seconds: 240

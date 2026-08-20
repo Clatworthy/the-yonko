@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-plan-finding.schema.json",
+  "title": "YonkoPlanFinding",
+  "description": "Finding contract for plan review. A concrete code locus is NOT mandatory because valuable plan findings concern something absent. Grounding is still mandatory via evidence_kind + evidence_reference.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "reviewer",
+    "category",
+    "severity",
+    "title",
+    "claim",
+    "evidence_kind",
+    "evidence_reference",
+    "production_consequence",
+    "confidence"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "reviewer": {
+      "type": "string",
+      "enum": ["shanks", "blackbeard", "buggy", "luffy", "chair", "verifier"]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "missing-repository",
+        "missing-contract",
+        "architectural-assumption",
+        "migration",
+        "rollout",
+        "rollback",
+        "deploy-order",
+        "concurrency-failure-mode",
+        "compatibility",
+        "testing-strategy",
+        "unnecessary-complexity",
+        "ownership-decision",
+        "security",
+        "other"
+      ]
+    },
+    "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+    "title": { "type": "string", "minLength": 1 },
+    "claim": { "type": "string", "minLength": 1 },
+    "evidence_kind": {
+      "type": "string",
+      "enum": [
+        "plan_section",
+        "code_inspected",
+        "contract_inspected",
+        "document_inspected"
+      ]
+    },
+    "evidence_reference": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Exact plan section/statement, or repo path+symbol actually inspected, or contract/API/event/schema/document inspected."
+    },
+    "production_consequence": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What goes wrong in production if the plan ships as written."
+    },
+    "missing_element": {
+      "type": "string",
+      "description": "The repository, contract, step, test, or decision absent from the plan."
+    },
+    "assumption_challenged": {
+      "type": "string",
+      "description": "The plan assumption this finding disputes."
+    },
+    "recommended_plan_change": {
+      "type": "string",
+      "description": "Minimal change to the plan (not production code)."
+    },
+    "locus": {
+      "type": "object",
+      "description": "Optional for plan findings.",
+      "additionalProperties": false,
+      "properties": {
+        "repository": { "type": "string" },
+        "path": { "type": "string" },
+        "symbol": { "type": "string" }
+      }
+    },
+    "done_when_item": { "type": "string" },
+    "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+  }
+}

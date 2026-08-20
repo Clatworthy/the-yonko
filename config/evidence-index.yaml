@@ -1,0 +1,88 @@
+# Engineering Evidence Index adapter (Yonko V3.1).
+# Completion/context adapter - NOT a review type.
+# Never auto-publishes, commits, or pushes.
+
+version: 1
+
+enabled: true
+
+# Canonical local checkout. Override with env YONKO_EVIDENCE_REPO.
+# Leave empty to disable publication/query against a repo (candidate generation still works).
+evidence_repo: ""
+
+# Disposable read cache rebuilt from the canonical checkout.
+cache_root: "~/.cursor/yonko-evidence-cache"
+
+# Bundled schema + taxonomy copied into a new local evidence repo on init-repo.
+schema_version: "1.0.0"
+taxonomy_version: "1.0.0"
+scoring_version: "1.0.0"
+
+candidate:
+  # Written under <session>/evidence-candidate/
+  dir_name: evidence-candidate
+  require_finalize: true
+
+publication:
+  require_candidate_hash: true
+  require_human_approver: true
+  # Hard safeguards - these commands are never invoked by this adapter.
+  forbid_git_commit: true
+  forbid_git_push: true
+  forbid_remote: true
+
+allowed_artifacts:
+  plan:
+    - PLAN.approved.md
+  document:
+    pap: [PAP.final.md]
+    prd: [PRD.final.md]
+    adr: [ADR.final.md]
+    design: [DESIGN.final.md]
+  implementation:
+    - final.patch
+
+# Forbidden in candidate/canonical packages.
+exclude_files:
+  - packet.md
+  - DOCKET.md
+  - bulletins.md
+  - CHANGELOG.md
+  - events.jsonl
+  - "*.raw.json"
+
+secret_scan:
+  path_patterns:
+    - "(?i)master\\.env"
+    - "(?i)credentials\\.json"
+    - "(?i)id_rsa"
+    - "(?i)\\.pem$"
+  line_patterns:
+    - "(?i)^\\s*(export\\s+)?[A-Z0-9_]*(PASSWORD|SECRET|TOKEN|API_KEY|ACCESS_KEY)[A-Z0-9_]*\\s*="
+
+retrieval:
+  min_score: 3.0
+  weights:
+    api: 5.0
+    event: 5.0
+    database_table: 5.0
+    contract: 5.0
+    repository: 3.0
+    service: 3.0
+    concept: 2.0
+    technology: 2.0
+    architectural_pattern: 2.0
+    artifact_type: 1.0
+    finding_pattern: 2.0
+  # Strong structural match = any of these field families hit at least once.
+  strong_fields:
+    - api
+    - event
+    - database_table
+    - contract
+  # Or at least this many controlled-concept overlaps.
+  min_concept_overlap: 2
+
+relevance_threshold_note: >
+  Historical evidence is advisory only. It never changes risk bands, seating,
+  adjudication, or apply rules.

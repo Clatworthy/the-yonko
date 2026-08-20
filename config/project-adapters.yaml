@@ -1,0 +1,25 @@
+# Project adapters (shipped default - org-agnostic)
+#
+# Luffy is the optional company-specific-requirements seat (house rules).
+# He is abroad unless a matched adapter sets luffy.enabled: true.
+#
+# Local overlay (gitignored): config/project-adapters.local.yaml
+# Example template: examples/org-standards/
+#
+# Chair merge order: this file, then project-adapters.local.yaml if present.
+# Paths may use ${YONKO_PROJECT_ROOT}.
+
+version: 1
+
+adapters:
+  default:
+    luffy:
+      enabled: false
+    org_ship_gate:
+      enabled: false
+    secrets:
+      exclude_names:
+        - ".env"
+        - ".env.local"
+      never_packet_patterns:
+        - "(?i)(password|secret|token|api[_-]?key)\\s*="

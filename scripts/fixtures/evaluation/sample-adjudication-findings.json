@@ -1,0 +1,57 @@
+{
+  "round": 1,
+  "packet_hash": "5fcb56eec98da6dc0faf2e9e95d5783c273594b5d9248090f196b40659042f41",
+  "accepted": [],
+  "held": [],
+  "dropped": [
+    {
+      "id": "Y1",
+      "sources": [
+        "Bb1",
+        "Lf3"
+      ],
+      "action": "applied",
+      "severity": "medium",
+      "title": "Remove unused Dashboard Unleash export",
+      "reason": "Applied and pushed to Gateway !451 (5c1ff30)."
+    },
+    {
+      "id": "Y2",
+      "sources": [
+        "Lf1"
+      ],
+      "action": "resolved",
+      "severity": "high",
+      "title": "FE product Unleash uses general Gateway flag evaluator",
+      "reason": "Human attested product Unleash flags are userWithEmail-only (2026-07-28)."
+    },
+    {
+      "id": "Y3",
+      "sources": [
+        "Lf2"
+      ],
+      "action": "drop",
+      "severity": "high",
+      "title": "FE stash conflict markers",
+      "reason": "Ungrounded; tree clean."
+    },
+    {
+      "id": "Y4",
+      "sources": [
+        "Lf4"
+      ],
+      "action": "drop",
+      "severity": "medium",
+      "title": "Allowlist equals all product flags",
+      "reason": "Intentional."
+    }
+  ],
+  "notes": [
+    {
+      "id": "BuN1",
+      "kind": "deploy-order",
+      "action": "note",
+      "claim": "Elevate/merge Gateway !451 before or with FE !5444 for Dashboard Unleash"
+    }
+  ]
+}

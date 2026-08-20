@@ -1,0 +1,13 @@
+diff --git a/src/main/java/com/example/demo/CreditRepository.java b/src/main/java/com/example/demo/CreditRepository.java
+--- a/src/main/java/com/example/demo/CreditRepository.java
++++ b/src/main/java/com/example/demo/CreditRepository.java
+@@ -5,7 +5,8 @@ import org.springframework.stereotype.Repository;
+ @Repository
+ public class CreditRepository {
+     public CreditResponse useCredits(String customerId, List<String> ids) {
+-        return new CreditResponse(ids.size(), 10);
++        List<String> newIds = ids;
++        int unused = 10;
++        return new CreditResponse(newIds.size(), unused);
+     }
+ }

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-change-classes.schema.json",
+  "title": "YonkoChangeClasses",
+  "description": "Deterministic change-class classification for V3.5 reviewer routing. Closed enum only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_version",
+    "policy_hash",
+    "classes",
+    "reasons",
+    "advisory_classes",
+    "dropped_advisory"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "policy_version": { "type": "integer", "minimum": 1 },
+    "policy_hash": { "type": "string", "minLength": 8 },
+    "classes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/changeClass" },
+      "uniqueItems": true
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["class", "reason", "source"],
+        "properties": {
+          "class": { "$ref": "#/$defs/changeClass" },
+          "reason": { "type": "string", "minLength": 1 },
+          "source": {
+            "type": "string",
+            "enum": ["signal", "advisory"]
+          },
+          "path_hint": { "type": "string" }
+        }
+      }
+    },
+    "advisory_classes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/changeClass" },
+      "uniqueItems": true
+    },
+    "dropped_advisory": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Free-text / unknown advisory tags that were ignored"
+    }
+  },
+  "$defs": {
+    "changeClass": {
+      "type": "string",
+      "enum": [
+        "auth",
+        "database",
+        "api",
+        "infrastructure",
+        "documentation",
+        "configuration",
+        "dependency",
+        "concurrency",
+        "performance",
+        "billing",
+        "async-messaging",
+        "frontend"
+      ]
+    }
+  }
+}

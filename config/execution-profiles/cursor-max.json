@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "cursor-max",
+  "display_name": "Cursor max",
+  "status": "stable",
+  "description": "Cursor-only. Selects strongest configured preference from model-policy.yaml (last prefer token / escalation end of list). Higher usage cost. Manual selection only - never auto-activated by risk.",
+  "fallback_policy": "none",
+  "requires_runtimes": ["cursor"],
+  "cost_note": "Highest expected Cursor usage cost. Intended for high-value manual selection. Does not alter risk routing.",
+  "seats": {
+    "chair": {
+      "runtime": "cursor",
+      "model_policy_ref": "chair.prefer",
+      "model_preference": "default",
+      "notes": "Chair stays on Composer preference."
+    },
+    "shanks": {
+      "runtime": "cursor",
+      "model_policy_ref": "families.shanks",
+      "model_preference": "strongest"
+    },
+    "blackbeard": {
+      "runtime": "cursor",
+      "model_policy_ref": "families.blackbeard",
+      "model_preference": "strongest"
+    },
+    "buggy": {
+      "runtime": "cursor",
+      "model_policy_ref": "families.buggy",
+      "model_preference": "strongest"
+    },
+    "luffy": {
+      "runtime": "cursor",
+      "model_policy_ref": "families.luffy",
+      "model_preference": "strongest",
+      "notes": "Strongest configured escalation preference; still adapter-gated."
+    }
+  }
+}

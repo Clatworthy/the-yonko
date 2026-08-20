@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-finding.schema.json",
+  "title": "YonkoFinding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "reviewer",
+    "category",
+    "severity",
+    "title",
+    "claim",
+    "locus",
+    "evidence",
+    "reachability",
+    "impact",
+    "confidence"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "reviewer": {
+      "type": "string",
+      "enum": ["shanks", "blackbeard", "buggy", "luffy", "chair", "verifier"]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "correctness",
+        "concurrency",
+        "auth",
+        "data-integrity",
+        "side-effect",
+        "api-contract",
+        "test-gap",
+        "ops",
+        "security",
+        "other"
+      ]
+    },
+    "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+    "title": { "type": "string", "minLength": 1 },
+    "claim": { "type": "string", "minLength": 1 },
+    "locus": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "path"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "symbol": { "type": "string" },
+        "diff_hunk": { "type": "string" }
+      }
+    },
+    "evidence": { "type": "string", "minLength": 1 },
+    "reachability": { "type": "string", "minLength": 1 },
+    "impact": { "type": "string", "minLength": 1 },
+    "proposed_verification": { "type": "string" },
+    "done_when_item": { "type": "string" },
+    "fix_hint": { "type": "string" },
+    "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+  }
+}

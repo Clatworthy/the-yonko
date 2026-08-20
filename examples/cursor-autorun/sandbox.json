@@ -1,0 +1,11 @@
+{
+  "type": "workspace_readwrite",
+  "additionalReadonlyPaths": [
+    "HOME_PLACEHOLDER/.cursor/skills/the-yonko"
+  ],
+  "additionalReadwritePaths": [
+    "HOME_PLACEHOLDER/.cursor/yonko-sessions",
+    "HOME_PLACEHOLDER/.cursor/yonko-evidence-cache"
+  ],
+  "enableSharedBuildCache": true
+}

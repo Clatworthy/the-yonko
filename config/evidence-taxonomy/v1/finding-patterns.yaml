@@ -1,0 +1,37 @@
+# Controlled finding-pattern keys for repeated-mistake aggregation.
+# Only validated findings with an assigned pattern count toward "repeated mistakes".
+version: "1.0.0"
+
+patterns:
+  guarded-delete-before-eligibility:
+    description: Irreversible rehome/move before a conditional delete that can no-op.
+    match_categories: [data-integrity, concurrency-failure-mode]
+    match_title_regex: "(?i)(rehome|deletePlaceholder|guarded.?delete|TOCTOU)"
+  missing-contract-version-order:
+    description: Consuming service lockfile/client bumped before published model jar.
+    match_categories: [missing-contract, api-contract, compatibility]
+    match_title_regex: "(?i)(lockfile|model.?jar|unpublished|version.?order)"
+  sibling-shared-parent-omission:
+    description: Partial leave treated as full dissolve on a shared parent.
+    match_categories: [data-integrity]
+    match_title_regex: "(?i)(sibling|shared.?parent|partial.?leave|dissolve)"
+  auth-boundary-gap:
+    description: Authorization missing or inconsistent on a customer-facing path.
+    match_categories: [auth, security]
+    match_title_regex: "(?i)(auth|permission|RequireUser|isolation)"
+  async-side-effect-wrong-identity:
+    description: Stop/start/notify uses wrong external identity or channel.
+    match_categories: [side-effect, operational-gap]
+    match_title_regex: "(?i)(side.?effect|leaf|identity|enqueue|publish|unsubscribe)"
+  presence-shape-patch-mistake:
+    description: PATCH/optional field presence mishandled (omit vs null vs value).
+    match_categories: [api-contract, ambiguous-requirement]
+    match_title_regex: "(?i)(presence|patch|null.?empty|tri.?state|omit)"
+  missing-rollback-or-deploy-order:
+    description: Rollout/rollback or deploy order absent from a material change.
+    match_categories: [rollout, rollback, deploy-order, operational-gap]
+    match_title_regex: "(?i)(rollback|deploy.?order|rollout|two.?phase)"
+  untestable-or-happy-path-only:
+    description: Testing strategy covers only the happy path or is not testable.
+    match_categories: [testing-strategy, test-gap, ambiguous-requirement]
+    match_title_regex: "(?i)(test|happy.?path|untestable|success measure)"

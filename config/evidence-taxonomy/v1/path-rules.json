@@ -1,0 +1,94 @@
+{
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "auth-paths",
+      "pattern": "(?i)(auth|authori[sz]|permission|rbac|jwt|RequireUser|auth0)",
+      "concepts": [
+        "auth",
+        "permissions",
+        "security"
+      ]
+    },
+    {
+      "id": "openapi-contracts",
+      "pattern": "(?i)(openapi|\\.ya?ml$|/api/|graphql|\\*-model)",
+      "concepts": [
+        "contracts",
+        "api-versioning"
+      ]
+    },
+    {
+      "id": "migrations",
+      "pattern": "(?i)(flyway|migration|V[0-9]+__|liquibase|jooq)",
+      "concepts": [
+        "database-migrations"
+      ]
+    },
+    {
+      "id": "messaging",
+      "pattern": "(?i)(sqs|sns|kafka|webhook|outbox|consumer|publisher)",
+      "concepts": [
+        "events",
+        "external-integrations"
+      ]
+    },
+    {
+      "id": "feature-flags",
+      "pattern": "(?i)(unleash|feature.?flag|FeatureToggle)",
+      "concepts": [
+        "feature-flags"
+      ]
+    },
+    {
+      "id": "billing-features",
+      "pattern": "(?i)(billing|invoice|credit.?note|payment|wallet)",
+      "concepts": [
+        "customer-features"
+      ]
+    },
+    {
+      "id": "concurrency",
+      "pattern": "(?i)(concurren|idempoten|retry|lock|race|TOCTOU|rehome|dissolve)",
+      "concepts": [
+        "concurrency"
+      ]
+    },
+    {
+      "id": "observability",
+      "pattern": "(?i)(metric|cloudwatch|sentry|alarm|trace|observab)",
+      "concepts": [
+        "observability"
+      ]
+    },
+    {
+      "id": "testing",
+      "pattern": "(?i)(test/|__tests__|\\.test\\.|\\.spec\\.|Test\\.java)",
+      "concepts": [
+        "testing"
+      ]
+    },
+    {
+      "id": "deployment",
+      "pattern": "(?i)(deploy|rollout|rollback|task.?def|ecs|terraform|cloudformation)",
+      "concepts": [
+        "deployment",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "caching",
+      "pattern": "(?i)(cache|redis|caffeine)",
+      "concepts": [
+        "caching"
+      ]
+    },
+    {
+      "id": "performance",
+      "pattern": "(?i)(latency|throughput|p99|timeout|pool.?size)",
+      "concepts": [
+        "performance"
+      ]
+    }
+  ]
+}

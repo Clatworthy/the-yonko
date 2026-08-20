@@ -1,0 +1,50 @@
+diff --git a/src/main/java/com/example/demo/OrderService.java b/src/main/java/com/example/demo/OrderService.java
+--- a/src/main/java/com/example/demo/OrderService.java
++++ b/src/main/java/com/example/demo/OrderService.java
+@@ -14,7 +14,8 @@ public class OrderService {
+     }
+ 
+     @Transactional
+-    public Order confirm(String orderId) {
++    @PreAuthorize("hasAuthority('ORDER_CONFIRM')")
++    public Order confirm(String orderId, boolean notify) {
+         Order order = orderRepository.findById(orderId);
+         order.confirm();
+         orderRepository.save(order);
+-        notificationClient.publishConfirmed(orderId);
++        if (notify) {
++            notificationClient.publishConfirmed(orderId);
++        }
+         return order;
+     }
+ }
+diff --git a/src/main/java/com/example/demo/Order.java b/src/main/java/com/example/demo/Order.java
+--- a/src/main/java/com/example/demo/Order.java
++++ b/src/main/java/com/example/demo/Order.java
+@@ -4,6 +4,7 @@ public class Order {
+     private final String id;
+     private String status = "NEW";
++    private String confirmedBy;
+     public Order(String id) { this.id = id; }
+     public void confirm() { this.status = "CONFIRMED"; }
+     public String getId() { return id; }
+ }
+diff --git a/src/main/resources/db/migration/V2__order_confirmed_at.sql b/src/main/resources/db/migration/V2__order_confirmed_at.sql
+new file mode 100644
+--- /dev/null
++++ b/src/main/resources/db/migration/V2__order_confirmed_at.sql
+@@ -0,0 +1,1 @@
++ALTER TABLE orders ADD COLUMN confirmed_at TIMESTAMP NULL;
+diff --git a/src/main/java/com/example/demo/OrderController.java b/src/main/java/com/example/demo/OrderController.java
+--- a/src/main/java/com/example/demo/OrderController.java
++++ b/src/main/java/com/example/demo/OrderController.java
+@@ -12,7 +12,8 @@ public class OrderController {
+     }
+ 
+-    @PostMapping("/orders/{id}/confirm")
++    @PostMapping("/v1/orders/{id}/confirm")
+     @PreAuthorize("hasAuthority('ORDER_CONFIRM')")
+     public Order confirm(@PathVariable String id) {
+         return orderService.confirm(id);
+     }
+ }

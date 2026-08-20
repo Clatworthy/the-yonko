@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "version": "2026-08-04",
+  "description": "Single source of truth for Yonko seat model IDs. Execution profiles reference a panel; adapters never choose models.",
+  "panels": {
+    "cursor-opencode-go": {
+      "display_name": "Cursor + OpenCode Go default council",
+      "seats": {
+        "chair": {
+          "runtime": "cursor",
+          "configured": "auto",
+          "resolved": "auto",
+          "display_name": "Cursor Auto",
+          "resolve_mode": "literal",
+          "notes": "Orchestration. Not a guaranteed OpenAI model. Never resolve Auto into a provider."
+        },
+        "shanks": {
+          "runtime": "cursor",
+          "configured": "grok",
+          "resolved": "grok",
+          "display_name": "Grok",
+          "resolve_mode": "literal",
+          "notes": "Pinned Cursor Grok. Never Auto."
+        },
+        "blackbeard": {
+          "runtime": "opencode",
+          "configured": "opencode-go/deepseek-v4-flash",
+          "display_name": "DeepSeek V4 Flash",
+          "provider_hint": "opencode-go",
+          "resolve_mode": "exact",
+          "match_substrings": [
+            "opencode-go/deepseek-v4-flash"
+          ],
+          "notes": "Default correctness seat on OpenCode Go (speed). Use blackbeard_pro alternate for peak SWE depth."
+        },
+        "buggy": {
+          "runtime": "opencode",
+          "configured": "opencode-go/gpt-5.6-luna",
+          "display_name": "GPT-5.6 Luna",
+          "provider_hint": "opencode-go",
+          "resolve_mode": "exact",
+          "match_substrings": [
+            "opencode-go/gpt-5.6-luna"
+          ],
+          "notes": "Guaranteed GPT/OpenAI-family reviewer on OpenCode Go."
+        },
+        "luffy": {
+          "runtime": "opencode",
+          "configured": "opencode-go/qwen3.7-plus",
+          "display_name": "Qwen 3.7 Plus",
+          "provider_hint": "opencode-go",
+          "resolve_mode": "exact",
+          "match_substrings": [
+            "opencode-go/qwen3.7-plus"
+          ],
+          "activation": "escalation_only",
+          "notes": "Org-standards escalation (high/critical / /yonko full when adapter enables). Distinct provider from DeepSeek Flash (Blackbeard) and Luna (Buggy). Fail closed if unavailable."
+        },
+        "org_ship_gate": {
+          "runtime": "opencode",
+          "configured": "opencode-go/gpt-5.6-luna",
+          "display_name": "GPT-5.6 Luna (org ship gate)",
+          "provider_hint": "opencode-go",
+          "resolve_mode": "exact",
+          "match_substrings": [
+            "opencode-go/gpt-5.6-luna"
+          ],
+          "activation": "post_council_ship_gate",
+          "notes": "Not a council seat. Optional post-council hostile org ship gate on OpenCode Go (OpenAI). Required before finalize pass only when the project adapter enables org_ship_gate."
+        }
+      }
+    }
+  },
+  "alternates": {
+    "blackbeard_pro": {
+      "seat": "blackbeard",
+      "panel": "cursor-opencode-go",
+      "configured": "opencode-go/deepseek-v4-pro",
+      "display_name": "DeepSeek V4 Pro",
+      "reason": "Optional peak SWE depth when Flash is too shallow. Edit the panel seat configured id - no runtime auto-switch."
+    },
+    "luffy_kimi": {
+      "seat": "luffy",
+      "panel": "cursor-opencode-go",
+      "configured": "opencode-go/kimi-k3",
+      "display_name": "Kimi K3",
+      "reason": "Optional only - historically timed out at 600s on plan packets. Edit panel seat configured id - no runtime auto-switch."
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko://contracts/evaluation/seat-effectiveness",
+  "title": "seat-effectiveness",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "seat": {
+      "type": "string"
+    },
+    "raw_findings": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "accepted_unique": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "duplicates": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "duration_ms": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "status": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "seat",
+    "status"
+  ]
+}

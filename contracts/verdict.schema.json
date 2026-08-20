@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-verdict.schema.json",
+  "title": "YonkoVerdict",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["session_id", "round", "verdict", "risk", "mode"],
+  "properties": {
+    "session_id": { "type": "string", "minLength": 1 },
+    "review_type": {
+      "type": "string",
+      "enum": ["implementation", "plan", "document"],
+      "description": "Absent means implementation (V2 compatibility)."
+    },
+    "artifact_type": {
+      "type": "string",
+      "enum": ["pap", "prd", "adr", "design"],
+      "description": "Required when review_type is document."
+    },
+    "document_mode": { "type": "string", "enum": ["create", "review"] },
+    "linked_session": { "type": "string" },
+    "risk_basis": {
+      "type": "string",
+      "enum": ["diff-derived", "heuristic from stated scope and inspected context"]
+    },
+    "handoff_artifact": {
+      "type": "string",
+      "description": "PLAN.approved.md or <TYPE>.final.md path when written."
+    },
+    "round": { "type": "integer", "minimum": 0 },
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "remand", "deadlock", "adjourned"]
+    },
+    "risk": {
+      "type": "string",
+      "enum": ["trivial", "low", "medium", "high", "critical"]
+    },
+    "mode": { "type": "string", "enum": ["standard", "autopilot"] },
+    "route": { "type": "string" },
+    "done_when": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["item", "status"],
+        "properties": {
+          "item": { "type": "string" },
+          "status": { "type": "string", "enum": ["met", "n/a", "unmet"] }
+        }
+      }
+    },
+    "notes": { "type": "array", "items": { "type": "string" } },
+    "open_holds": { "type": "array", "items": { "type": "string" } },
+    "packet_hash": { "type": "string" },
+    "human_runway": { "type": "array", "items": { "type": "string" } },
+    "engineering_confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "summary_path": { "type": "string" },
+    "review_outcome": {
+      "type": "string",
+      "enum": ["pass", "findings", "inconclusive"],
+      "description": "Defect axis only. pass = no validated defects, not system-wide safety."
+    },
+    "evidence_completeness": {
+      "type": "string",
+      "enum": ["complete", "incomplete"]
+    },
+    "deployment_recommendation": {
+      "type": "string",
+      "enum": ["proceed", "proceed_with_caveat", "block"]
+    },
+    "outcome_axes": { "type": "object" }
+  }
+}

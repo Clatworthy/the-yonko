@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "id": "cursor-standard",
+  "display_name": "Cursor standard",
+  "status": "stable",
+  "description": "Backward-compatible Cursor-only seating. Reuses config/model-policy.yaml for family preferences.",
+  "fallback_policy": "none",
+  "requires_runtimes": ["cursor"],
+  "cost_note": "Uses existing Cursor model access only.",
+  "seats": {
+    "chair": {
+      "runtime": "cursor",
+      "model_policy_ref": "chair.prefer",
+      "model_preference": "default",
+      "notes": "Parent agent; not a Task seat."
+    },
+    "shanks": {
+      "runtime": "cursor",
+      "model_policy_ref": "families.shanks",
+      "model_preference": "default"
+    },
+    "blackbeard": {
+      "runtime": "cursor",
+      "model_policy_ref": "families.blackbeard",
+      "model_preference": "default"
+    },
+    "buggy": {
+      "runtime": "cursor",
+      "model_policy_ref": "families.buggy",
+      "model_preference": "default"
+    },
+    "luffy": {
+      "runtime": "cursor",
+      "model_policy_ref": "families.luffy",
+      "model_preference": "default",
+      "notes": "Adapter-gated; existing escalation rules unchanged."
+    }
+  }
+}

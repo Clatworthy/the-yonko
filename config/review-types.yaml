@@ -1,0 +1,115 @@
+# Review-type adapters (V3).
+# ONE shared engine (seats, independence, lenses, packet integrity, sessions,
+# events, adjudication priority, bulletins, confidence, human runway, budgets).
+# Adapters differ ONLY in: evidence collection, risk semantics, finding schema,
+# loop shape, output artifacts, verification behaviour, handoff rules.
+
+version: 1
+
+types:
+  implementation:
+    description: "V2 behaviour - unchanged. Review a real diff on a dirty branch."
+    evidence_script: collect-evidence.sh
+    risk_script: classify-risk.sh
+    risk_basis: diff-derived
+    finding_contract: contracts/finding.schema.json
+    validate_kind: findings
+    reviewers_prompt: prompts/reviewers.md
+    loop: "review -> adjudicate -> apply -> verify -> bounded re-review"
+    verification: scoped_tests_and_finding_verification
+    writes_production_code: true
+    output_artifacts: ["applied fixes", "verdict.json", "SUMMARY.md"]
+    handoff_in: "optional PLAN.approved.md + plan session id"
+    handoff_out: none
+
+  plan:
+    description: "Review a proposed implementation plan. No production code written."
+    evidence_script: collect-plan-evidence.sh
+    risk_script: classify-scope-risk.sh
+    risk_basis: heuristic from stated scope and inspected context
+    finding_contract: contracts/plan-finding.schema.json
+    validate_kind: plan-findings
+    reviewers_prompt: prompts/plan-reviewers.md
+    loop: "review -> revise -> optional single confirmation round -> human approval"
+    max_confirmation_rounds: 1
+    verification: claim_and_reconnaissance_validation
+    scoped_tests: false
+    writes_production_code: false
+    output_artifacts: ["PLAN.revised.md", "PLAN.approved.md", "SUMMARY.md"]
+    auto_continue_to_implementation: false
+    handoff_out: PLAN.approved.md
+
+  document:
+    description: "Create or review engineering/product documentation."
+    evidence_script: collect-document-evidence.sh
+    risk_script: classify-scope-risk.sh
+    risk_basis: heuristic from stated scope and inspected context
+    finding_contract: contracts/document-finding.schema.json
+    validate_kind: document-findings
+    reviewers_prompt: prompts/document-reviewers.md
+    adapters_config: config/document-adapters.yaml
+    loop: "draft-or-ingest -> review -> revise -> optional single confirmation round -> human approval"
+    max_confirmation_rounds: 1
+    verification: claim_validation_against_sources
+    scoped_tests: false
+    writes_production_code: false
+    modes: ["create", "review"]
+    artifact_types: ["pap", "prd", "adr", "design"]
+    output_artifacts:
+      pap: PAP.final.md
+      prd: PRD.final.md
+      adr: ADR.final.md
+      design: DESIGN.final.md
+    auto_publish: false
+
+# Seating per band. Same seats and lenses as implementation; only counts differ.
+seating:
+  plan:
+    trivial: 2
+    low: 2
+    medium: 3
+    high: 4
+    critical: 4
+    budgets: { trivial: 2, low: 3, medium: 4, high: 6, critical: 7 }
+  document:
+    trivial: 2
+    low: 2
+    medium: 3
+    high: 4
+    critical: 4
+    budgets: { trivial: 2, low: 3, medium: 4, high: 6, critical: 7 }
+
+# Omissions cannot be classified mechanically - reviewers are told to hunt them.
+omission_hunt:
+  plan: true
+  document: true
+  note: "Scope regexes see stated intent only. Absent scope is a reviewer duty."
+
+# Completion / context adapters (NOT review types). Opt-in. Do not change seating,
+# risk bands, adjudication, or apply rules. Publication is always a separate
+# explicit human CLI action and never auto-runs from finalize.
+completion_adapters:
+  evidence_index:
+    enabled: true
+    description: >
+      Engineering Evidence Index - deterministic institutional store of completed
+      Yonko sessions (structured metadata + final artifacts). Local Git checkout
+      via YONKO_EVIDENCE_REPO; candidates stage under the session; human publishes
+      locally only (no git commit/push/remote from this adapter).
+    config: config/evidence-index.yaml
+    config_json: config/evidence-index.json
+    cli: scripts/evidence-index.py
+    schemas:
+      - contracts/evidence/evidence-record.schema.json
+      - contracts/evidence/evidence-event.schema.json
+      - contracts/evidence/index-manifest.schema.json
+    taxonomy: config/evidence-taxonomy/v1/
+    templates:
+      candidate_summary: templates/evidence-candidate.md
+      retrieval_receipt: templates/evidence-retrieval-receipt.md
+    finalize_hook: eligibility_report_only
+    changes_review_behavior: false
+    auto_publish: false
+    require_env: YONKO_EVIDENCE_REPO
+    safe_publish_command: scripts/evidence-index.py publish
+    invoke: "/yonko evidence publish"

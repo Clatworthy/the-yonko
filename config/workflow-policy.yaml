@@ -1,0 +1,36 @@
+# Workflow legality policy (V3.4)
+# Protocol governs process. Evidence governs decisions.
+# File-backed only - no runtime service.
+
+version: 1
+
+# New sessions default to enforce. Override with env YONKO_WORKFLOW_MODE=shadow|enforce
+default_mode: enforce
+env_override: YONKO_WORKFLOW_MODE
+
+# Authoritative in enforce mode (fail closed). Others may still be observed.
+authoritative_guards:
+  - OPEN_MATERIAL_FINDINGS
+  - VERIFICATION_REQUIRED
+  - REVIEWER_INCOMPLETE
+  - OPENCODE_EXECUTE_MISSING
+  - HUMAN_APPROVAL_REQUIRED
+  - PACKET_STALE
+  - PACKET_HASH_MISMATCH
+  - BUDGET_EXCEEDED
+  - WRITE_POLICY_VIOLATION
+  - ILLEGAL_TRANSITION
+  - PRECONDITION_FAILED
+
+# Seating floors: authoritative in routing-policy.yaml band_floor (implementation)
+# and review-types.yaml (plan/document). Do not duplicate here.
+
+# Confirmation / rematch limits (plan/document)
+max_confirmation_rounds:
+  plan: 1
+  document: 1
+
+# Verify-required bands: authoritative in verification-policy.yaml require_verifier_bands.
+
+principle: "Protocol governs process. Evidence governs decisions."
+information_preservation: "Yonko may optimise representation, but it must never optimise away engineering information."

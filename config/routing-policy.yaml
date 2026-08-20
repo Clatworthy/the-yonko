@@ -1,0 +1,182 @@
+# V3.5 reviewer routing policy
+# Policy owns seating. Scripts classify. AI may only add advisory classes from the closed enum.
+# Right-hand seats must be: shanks | blackbeard | buggy | luffy
+# Verifier is a step flag (require_verifier), never a council seat.
+
+version: 1
+
+known_seats:
+  - shanks
+  - blackbeard
+  - buggy
+  - luffy
+
+# Closed change-class enum (also enforced by contracts/change-classes.schema.json)
+closed_classes:
+  - auth
+  - database
+  - api
+  - infrastructure
+  - documentation
+  - configuration
+  - dependency
+  - concurrency
+  - performance
+  - billing
+  - async-messaging
+  - frontend
+
+# Band baseline mirrors model-policy.yaml route_reviewers (compatibility when no classes fire)
+band_baseline:
+  trivial:
+    - blackbeard
+  low:
+    - shanks
+    - blackbeard
+  medium:
+    - shanks
+    - blackbeard
+    - buggy
+  high:
+    - shanks
+    - blackbeard
+    - buggy
+    - luffy
+  critical:
+    - shanks
+    - blackbeard
+    - buggy
+    - luffy
+
+# Authoritative seating floors (implementation). Workflow legality reads these.
+band_floor:
+  trivial: 1
+  low: 2
+  medium: 3
+  high: 4
+  critical: 4
+
+# Mirrored for readability - authoritative list is verification-policy.require_verifier_bands.
+# Scripts prefer verification-policy when present; keep this in sync if you override locally.
+band_require_verifier:
+  - medium
+  - high
+  - critical
+
+classes:
+  auth:
+    seats:
+      - shanks
+      - blackbeard
+    require_verifier: true
+    reason: "Authentication / authorisation surface changed"
+    focus_hints:
+      - "auth boundaries"
+      - "permission checks"
+  database:
+    seats:
+      - blackbeard
+      - shanks
+    require_verifier: true
+    reason: "Schema or migration surface changed"
+    focus_hints:
+      - "migrations"
+      - "data integrity"
+  api:
+    seats:
+      - shanks
+    require_verifier: true
+    reason: "API / contract surface changed"
+    focus_hints:
+      - "backwards compatibility"
+      - "OpenAPI / GraphQL shapes"
+  infrastructure:
+    seats:
+      - buggy
+      - blackbeard
+    require_verifier: true
+    reason: "Infrastructure / deploy surface changed"
+    focus_hints:
+      - "rollout"
+      - "operational failure"
+  documentation:
+    seats:
+      - blackbeard
+    require_verifier: false
+    reason: "Documentation change"
+  configuration:
+    seats:
+      - blackbeard
+      - shanks
+    require_verifier: false
+    reason: "Configuration change"
+  dependency:
+    seats:
+      - shanks
+      - blackbeard
+    require_verifier: false
+    reason: "Dependency lock / manifest change"
+  concurrency:
+    seats:
+      - blackbeard
+      - buggy
+    require_verifier: true
+    reason: "Concurrency / locking / async control flow changed"
+    focus_hints:
+      - "races"
+      - "retries"
+  performance:
+    seats:
+      - buggy
+      - blackbeard
+    require_verifier: false
+    reason: "Performance-sensitive path changed"
+    focus_hints:
+      - "latency"
+      - "N+1 / unbounded work"
+  billing:
+    seats:
+      - shanks
+      - blackbeard
+      - buggy
+    require_verifier: true
+    reason: "Money / billing / invoice surface changed"
+  async-messaging:
+    seats:
+      - blackbeard
+      - buggy
+    require_verifier: true
+    reason: "SQS/SNS/async messaging surface changed"
+  frontend:
+    seats:
+      - shanks
+      - blackbeard
+    require_verifier: false
+    reason: "Frontend / UI surface changed"
+
+# Deterministic path/content signals → closed classes
+signals:
+  auth:
+    - path: "(?i)(@PreAuthorize|auth0|\\boauth\\b|authori[sz]ation|authentication|\\brbac\\b|\\bjwt\\b|AuthMiddleware|permission.?check|features/auth|/auth/)"
+  database:
+    - path: "(?i)(flyway|liquibase|V[0-9]+__|/db/migration|schema\\.sql)"
+  api:
+    - path: "(?i)(openapi|\\bswagger\\b|GraphQL|openapi-configurations|api\\.ya?ml)"
+  infrastructure:
+    - path: "(?i)(Dockerfile|docker-compose|\\.github/workflows|terraform|cloudformation|k8s|helm|task-definition)"
+  documentation:
+    - path: "(?i)(README|CHANGELOG|docs/|\\.md$)"
+  configuration:
+    - path: "(?i)(\\.(ya?ml|toml|properties|env\\.example)$|application[-.].*\\.(ya?ml|properties))"
+  dependency:
+    - path: "(?i)(gradle\\.lockfile|package-lock\\.json|yarn\\.lock|Cargo\\.lock|go\\.sum|pom\\.xml|build\\.gradle)"
+  concurrency:
+    - path: "(?i)(synchronized|ReentrantLock|concurrent|CompletableFuture|parallelStream|mutex|atomic)"
+  performance:
+    - path: "(?i)(cache|perf|latency|benchmark|N\\+1|pagination|batch)"
+  billing:
+    - path: "(?i)(\\bbilling\\b|(?<![A-Za-z])invoices?(?![A-Za-z])|\\bpayments?\\b|credit.?notes?|\\bwallets?\\b|\\brefunds?\\b)"
+  async-messaging:
+    - path: "(?i)(\\bsqs\\b|\\bsns\\b|\\bkafka\\b|enqueue|\\bwebhook\\b|outbox|@SqsListener)"
+  frontend:
+    - path: "(?i)(frontend/|\\.tsx?$|\\.jsx?$|\\.css$|\\.scss$)"

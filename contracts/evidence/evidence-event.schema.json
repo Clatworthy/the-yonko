@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-evidence-event.schema.json",
+  "title": "YonkoEvidenceEvent",
+  "description": "Append-only outcome/lifecycle event for a canonical evidence record.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "evidence_id",
+    "event_type",
+    "timestamp",
+    "actor",
+    "payload",
+    "previous_event_hash",
+    "event_hash"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "event_id": { "type": "string", "minLength": 1 },
+    "evidence_id": { "type": "string", "minLength": 1 },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "canonicalized",
+        "implementation_merged",
+        "deployment_started",
+        "deployment_completed",
+        "rollback_performed",
+        "incident_linked",
+        "assumption_invalidated",
+        "risk_realized",
+        "outcome_recorded",
+        "record_superseded"
+      ]
+    },
+    "timestamp": { "type": "string", "minLength": 1 },
+    "actor": { "type": "string", "minLength": 1 },
+    "source_reference": { "type": ["string", "null"] },
+    "payload": { "type": "object" },
+    "previous_event_hash": { "type": ["string", "null"] },
+    "event_hash": { "type": "string", "minLength": 64, "maxLength": 64 }
+  }
+}

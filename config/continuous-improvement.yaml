@@ -1,0 +1,56 @@
+# Continuous Improvement (Yonko V3.6)
+# Suggest-only. Never rewrites SKILL, routing policy, prompts, or workflow.
+# Human decides whether to act on Engineering Improvement Suggestions.
+
+version: 1
+
+enabled: true
+
+# Scan the last N canonical evidence records (by completed_at desc).
+window_reviews: 40
+
+# Pattern must appear at least this many times in the window to suggest process change.
+min_occurrences: 7
+
+# Buckets counted toward repeated patterns (accepted + validated = real defects found).
+finding_buckets:
+  - accepted
+  - validated
+
+# Prefer taxonomy finding_pattern; fall back to category when pattern is null.
+group_by:
+  - finding_pattern
+  - category
+
+# Severities that count (omit noise).
+min_severity:
+  - medium
+  - high
+  - critical
+
+# Output under the evidence repo (local files only - never git commit/push).
+output:
+  relative_dir: improvements
+  json_name: suggestions.json
+  markdown_name: ENGINEERING_IMPROVEMENT_SUGGESTIONS.md
+
+# Hard fences - scripts must refuse to write these paths.
+never_write_globs:
+  - "**/SKILL.md"
+  - "**/routing-policy.yaml"
+  - "**/risk-policy.yaml"
+  - "**/workflow-policy.yaml"
+  - "**/model-policy.yaml"
+  - "**/prompts/**"
+  - "**/contracts/**"
+
+suggestion_template: |
+  Engineering Improvement Suggestion
+  Pattern: {pattern_key}
+  Occurrences: {count} in the last {window} reviews
+  Classification: process_signal (not treated as an isolated one-off)
+  Suggestion: Consider updating the review protocol or adding canonical guidance for this class of issue.
+  Human decision required. Yonko will not rewrite policy or protocol files.
+
+isolated_note: |
+  Below threshold - treat as isolated unless a human escalates.

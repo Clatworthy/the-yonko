@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# Fake OpenCode CLI for Yonko unit tests. Controlled via YONKO_FAKE_OPENCODE_* env vars.
+# Never used in production.
+
+set -euo pipefail
+
+cmd="${1:-}"
+shift || true
+
+case "$cmd" in
+  --version)
+    echo "opencode fake 0.0.0-test"
+    exit 0
+    ;;
+  auth)
+    sub="${1:-}"
+    if [[ "${YONKO_FAKE_OPENCODE_AUTH:-ok}" == "missing" ]]; then
+      echo "no authenticated providers" >&2
+      exit 1
+    fi
+    if [[ "$sub" == "list" || "$sub" == "ls" ]]; then
+      echo "opencode"
+      exit 0
+    fi
+    exit 0
+    ;;
+  models)
+    if [[ "${YONKO_FAKE_OPENCODE_MODELS_FAIL:-}" == "1" ]]; then
+      echo "provider unavailable" >&2
+      exit 1
+    fi
+    echo "opencode/deepseek-v4-flash"
+    echo "opencode/qwen3.7-plus"
+    echo "opencode-go/deepseek-v4-flash"
+    echo "opencode-go/deepseek-v4-pro"
+    echo "opencode-go/gpt-5.6-luna"
+    echo "opencode-go/qwen3.7-plus"
+    echo "opencode-go/kimi-k3"
+    echo "opencode/other-model"
+    exit 0
+    ;;
+  run)
+    # Parse args loosely
+    model=""
+    outfile=""
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --model|-m) model="${2:-}"; shift 2 ;;
+        --format|--title|--file|-f) shift 2 ;;
+        *) shift ;;
+      esac
+    done
+    mode="${YONKO_FAKE_OPENCODE_RUN:-ok}"
+    # Discover output path from prompt is hard; write to YONKO_FAKE_OPENCODE_OUTPUT if set
+    outfile="${YONKO_FAKE_OPENCODE_OUTPUT:-}"
+    case "$mode" in
+      ok)
+        payload='{"findings":[],"notes":[],"repos_reviewed":["demo"],"attack_card":"Attack card:\n- n/a","disposition":"Content"}'
+        if [[ -n "$outfile" ]]; then
+          printf '%s\n' "$payload" >"$outfile"
+        fi
+        printf '%s\n' "$payload"
+        exit 0
+        ;;
+      fenced)
+        payload='{"findings":[],"notes":[],"disposition":"Content"}'
+        if [[ -n "$outfile" ]]; then
+          printf '%s\n' "$payload" >"$outfile"
+        fi
+        printf 'Here you go:\n```json\n%s\n```\n' "$payload"
+        exit 0
+        ;;
+      malformed)
+        echo "not json at all"
+        exit 0
+        ;;
+      timeout)
+        sleep "${YONKO_FAKE_OPENCODE_SLEEP:-30}"
+        exit 0
+        ;;
+      rate_limit)
+        echo "rate limit exceeded 429" >&2
+        exit 1
+        ;;
+      provider_down)
+        echo "provider unavailable" >&2
+        exit 1
+        ;;
+      modify_repo)
+        touch "${YONKO_FAKE_OPENCODE_TOUCH:-./yonko-fake-opencode-touch.txt}"
+        echo '{"findings":[],"disposition":"Content","attack_card":"n/a","notes":[],"repos_reviewed":["demo"]}'
+        exit 0
+        ;;
+      secret_leak)
+        echo 'api_key=sk-leak-should-be-redacted'
+        echo '{"findings":[],"disposition":"Content","attack_card":"n/a","notes":[],"repos_reviewed":["demo"]}'
+        exit 0
+        ;;
+      *)
+        echo "unknown fake mode $mode" >&2
+        exit 1
+        ;;
+    esac
+    ;;
+  *)
+    echo "fake-opencode: unknown command $cmd" >&2
+    exit 1
+    ;;
+esac

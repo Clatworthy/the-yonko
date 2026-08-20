@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-execution-profile.schema.json",
+  "title": "YonkoExecutionProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "status", "fallback_policy", "seats"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "id": {
+      "type": "string",
+      "enum": ["cursor-standard", "cursor-opencode-go", "cursor-max"]
+    },
+    "display_name": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["stable", "experimental"]
+    },
+    "description": { "type": "string" },
+    "fallback_policy": {
+      "type": "string",
+      "enum": ["none"]
+    },
+    "cost_note": { "type": "string" },
+    "model_selection_panel": {
+      "type": "string",
+      "description": "Panel id in config/model-selections.json; when set, seat models are merged from that panel"
+    },
+    "requires_runtimes": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["cursor", "opencode"] }
+    },
+    "seat_ladder": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["chair", "shanks", "blackbeard", "buggy", "luffy"]
+      },
+      "description": "Documented everyday seating order; risk routing still decides which seats sit"
+    },
+    "seats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["chair", "shanks", "blackbeard", "buggy", "luffy"],
+      "properties": {
+        "chair": { "$ref": "#/$defs/seatMapping" },
+        "shanks": { "$ref": "#/$defs/seatMapping" },
+        "blackbeard": { "$ref": "#/$defs/seatMapping" },
+        "buggy": { "$ref": "#/$defs/seatMapping" },
+        "luffy": { "$ref": "#/$defs/seatMapping" }
+      }
+    }
+  },
+  "$defs": {
+    "seatMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime"],
+      "properties": {
+        "runtime": {
+          "type": "string",
+          "enum": ["cursor", "opencode"]
+        },
+        "model_policy_ref": {
+          "type": "string",
+          "description": "Reference into config/model-policy.yaml (e.g. chair.prefer, families.shanks)"
+        },
+        "model_preference": {
+          "type": "string",
+          "enum": ["default", "strongest"],
+          "description": "How to pick within model_policy_ref prefer list"
+        },
+        "model": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "configured": {
+              "type": ["string", "null"],
+              "description": "Exact runtime model id when known; null = resolve via match"
+            },
+            "resolved": {
+              "type": "string",
+              "description": "Literal resolved label for Cursor Auto/Grok when no provider expand"
+            },
+            "display_name": { "type": "string" },
+            "match_substrings": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "description": "Case-insensitive substrings; all must appear; >1 hit fails (no silent pick)"
+            },
+            "provider_hint": { "type": "string" },
+            "resolve_mode": {
+              "type": "string",
+              "enum": ["literal", "exact"]
+            },
+            "activation": {
+              "type": "string",
+              "enum": ["always_when_routed", "escalation_only"]
+            }
+          }
+        },
+        "timeout_sec": { "type": "integer", "minimum": 1 },
+        "read_only": { "type": "boolean" },
+        "review_mode": {
+          "type": "string",
+          "enum": ["packet_only", "packet_plus_workspace_read"]
+        },
+        "notes": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "runtime": { "const": "opencode" } },
+            "not": {
+              "required": ["model"]
+            }
+          },
+          "then": {
+            "description": "OpenCode seats must gain model via inline model or model_selection_panel merge before invoke"
+          }
+        }
+      ]
+    }
+  }
+}

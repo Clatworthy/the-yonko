@@ -1,0 +1,166 @@
+# Observability (V2.1) - learning only, never auto-tuning
+#
+# Metrics and Engineering Confidence do NOT change seating, adjudication,
+# routing, apply rules, or reviewer prompts.
+
+version: 1
+
+policy:
+  auto_tune: false
+  influence_routing: false
+  influence_adjudication: false
+  influence_apply: false
+  # Hard rule: metrics never retune the protocol (see docs/INVARIANTS.md)
+  no_optimisation_without_evidence: true
+  metrics_inform_humans_only: true
+
+packet_principle: "Full relevant context ≠ Full available context"
+
+# Workflow legality is enforce-by-default (workflow-policy.yaml).
+# Observability artefacts (metrics, efficiency-report) remain fail-open and never change seating.
+workflow_legality:
+  owner: config/workflow-policy.yaml
+  default_mode: enforce
+  artefacts: [workflow.json, workflow-events.jsonl]
+  note: "Legality is workflow's job. This file only forbids auto-tune from metrics."
+
+# Hard rule: representation optimisations only - never lossy summaries of engineering content
+information_preservation:
+  principle: "Yonko may optimise representation, but it must never optimise away engineering information."
+  allowed:
+    - deduplicate_exact_or_safely_normalised_prose
+    - stable_references
+    - remove_ceremony_and_repeated_prompt_boilerplate
+    - linked_plan_handoff_boundary  # PLAN.approved.md only; not plan-session noise
+  forbidden:
+    - summarise_changed_code
+    - summarise_tests
+    - summarise_contracts
+    - summarise_migrations
+    - summarise_deployment_ordering
+  verbatim_packet_sections:
+    - "DIFF:*"
+    - fenced_code_blocks
+  quality_acceptance:
+    require_dual_packet_council_compare: true
+    compare:
+      - material_findings
+      - finding_coverage   # classes of issue, not only counts
+      - severities
+      - evidence_references
+      - verifier_outcome
+      - engineering_confidence
+    finding_coverage_categories:
+      - correctness
+      - architecture
+      - concurrency
+      - security
+      - performance
+      - compatibility
+      - testing
+      - operability
+      - data-integrity
+      - api-contract
+      - other
+    rule: >
+      Optimised packet must not produce fewer material findings, lose finding-coverage
+      categories, or weaker evidence unless each difference is explicitly justified.
+    no_hardcoded_savings_target: true
+    harness: scripts/compare-optimisation-quality.sh
+    mechanical_smoke: scripts/test-information-preservation-smoke.py
+
+# Emitted by finalize-session (fail-open, observational only)
+engineering_efficiency_report:
+  status: observational_shipped
+  rename_from: token_budget_report
+  emit_on: finalize-session
+  artefacts:
+    - efficiency-report.json
+    - SUMMARY.md#Engineering Efficiency Report
+  sections:
+    - packet    # tokens, compression, largest sections, repeated material, dedupe receipt
+    - review    # seats, loops, verification, findings, confidence
+    - knowledge # historical matches, evidence added, relationships, concepts
+  auto_change_behaviour: false
+  fail_open: true
+  future_metric: precedent_utilisation
+
+
+engineering_confidence:
+  levels: ["high", "medium", "low"]
+  required_for_every_review_type: true
+  evidence_based_not_self_rating: true
+  # Mechanical ticks the script can derive; Chair supplies the rest.
+  mechanical_checks:
+    - packet_complete
+    - evidence_collected
+    - risk_reviewed
+    - verification_complete_or_n_a
+    - deterministic_checks_recorded   # n/a for plan and document review
+    - handoff_artifact_present        # n/a for implementation review
+  chair_checks:
+    - deployment_straightforward
+    - done_when_honest
+    - no_open_product_ambiguity
+    - assumptions_remaining_stated
+    - source_coverage_adequate
+    - human_decisions_still_required
+
+# Suggested event types (Chair records via record-event.sh when they already happen).
+# Missing events → metrics show unknown; do not invent history.
+event_types:
+  - session_initialized
+  - evidence_collected              # implementation
+  - plan_evidence_collected         # plan
+  - document_evidence_collected     # document
+  - risk_classified                 # implementation (diff-derived)
+  - scope_risk_classified           # plan / document (heuristic)
+  - packet_hashed
+  - reviewers_seated
+  - findings_merged
+  - verification_completed
+  - apply                           # implementation code edit
+  - artifact_revised                # plan / document revision
+  - scoped_verify                   # implementation only
+  - round_complete
+  - verdict
+  - session_finalized
+
+# Passive metrics collected per session (learning only).
+metrics_collected:
+  - findings_by_reviewer
+  - unique_findings_by_reviewer
+  - rejected_or_ungrounded_rate
+  - reviewer_completion
+  - selected_route_and_task_count
+  - confirmation_or_rematch_count
+  - session_duration_seconds
+  - packet_bytes
+  - review_type
+  - artifact_type
+
+session_artefacts:
+  - metrics.json
+  - SUMMARY.md
+  - confidence.json
+
+# Cross-session rollup (aggregate-metrics.sh) is read-only learning.
+rollup:
+  path: "~/.cursor/yonko-sessions/_rollup/metrics-rollup.json"
+  never_feeds_runtime: true
+
+# Observational evaluation capture (3.9.0) - learning only, never auto-tune.
+# Sole owner of capture_on_finalize and fail_open for evaluation.
+# Hard-code: no auto-promote or CI-gate configuration keys.
+evaluation:
+  capture_on_finalize: true
+  fail_open: true
+  emit_on: finalize-session
+  artefacts:
+    - evaluation/review-measurement.json
+    - evaluation/council-effectiveness.json
+    - evaluation/council-effectiveness.md
+    - evaluation/eval-candidate.json
+  never_feeds_runtime: true
+  note: "Corpus paths and min_sample_n live in config/evaluation.yaml"
+

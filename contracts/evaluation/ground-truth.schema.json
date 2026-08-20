@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko://contracts/evaluation/ground-truth",
+  "title": "ground-truth",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "session_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "case_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "outcome_type": {
+      "type": "string"
+    },
+    "approved_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "outcome_type",
+    "approved_by"
+  ]
+}

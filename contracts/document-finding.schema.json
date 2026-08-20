@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-document-finding.schema.json",
+  "title": "YonkoDocumentFinding",
+  "description": "Finding contract for document review (PAP / PRD / ADR / technical design). No code locus required; grounding mandatory via evidence_kind + evidence_reference.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "reviewer",
+    "category",
+    "severity",
+    "title",
+    "claim",
+    "evidence_kind",
+    "evidence_reference",
+    "impact",
+    "confidence"
+  ],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "reviewer": {
+      "type": "string",
+      "enum": ["shanks", "blackbeard", "buggy", "luffy", "chair", "verifier"]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "inaccurate-claim",
+        "unsupported-claim",
+        "missing-section",
+        "ambiguous-requirement",
+        "unresolved-decision",
+        "internal-contradiction",
+        "implementation-risk",
+        "operational-gap",
+        "missing-stakeholder-concern",
+        "other"
+      ]
+    },
+    "severity": { "type": "string", "enum": ["critical", "high", "medium", "low"] },
+    "title": { "type": "string", "minLength": 1 },
+    "claim": { "type": "string", "minLength": 1 },
+    "evidence_kind": {
+      "type": "string",
+      "enum": [
+        "document_section",
+        "source_material",
+        "code_inspected",
+        "contract_inspected",
+        "document_inspected"
+      ]
+    },
+    "evidence_reference": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Exact document section/quote, supplied source material, repo path+symbol inspected, or contract/API/event/schema inspected."
+    },
+    "impact": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Consequence of shipping the document as written (misbuild, wrong scope, operational gap)."
+    },
+    "section": { "type": "string", "description": "Document section this concerns." },
+    "missing_section": { "type": "string", "description": "Required section absent from the artifact." },
+    "recommended_change": { "type": "string", "description": "Minimal revision to the document." },
+    "confidence": { "type": "string", "enum": ["low", "medium", "high"] }
+  }
+}

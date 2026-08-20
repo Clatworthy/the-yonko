@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "yonko-runtime-invocation.schema.json",
+  "title": "YonkoRuntimeInvocation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_id",
+    "session_dir",
+    "review_type",
+    "seat",
+    "runtime",
+    "model",
+    "packet_path",
+    "packet_hash",
+    "prompt_path",
+    "schema_path",
+    "output_path",
+    "timeout_sec",
+    "permissions"
+  ],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "session_id": { "type": "string", "minLength": 1 },
+    "session_dir": { "type": "string", "minLength": 1 },
+    "review_type": {
+      "type": "string",
+      "enum": ["implementation", "plan", "document"]
+    },
+    "seat": {
+      "type": "string",
+      "enum": ["chair", "shanks", "blackbeard", "buggy", "luffy"]
+    },
+    "runtime": {
+      "type": "string",
+      "enum": ["cursor", "opencode"]
+    },
+    "model": { "type": "string", "minLength": 1 },
+    "model_configured": { "type": "string" },
+    "model_resolved": { "type": "string" },
+    "packet_path": { "type": "string", "minLength": 1 },
+    "packet_hash": { "type": "string", "minLength": 1 },
+    "prompt_path": { "type": "string", "minLength": 1 },
+    "schema_path": { "type": "string", "minLength": 1 },
+    "output_path": { "type": "string", "minLength": 1 },
+    "timeout_sec": { "type": "integer", "minimum": 1 },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read", "write"],
+      "properties": {
+        "read": { "type": "boolean" },
+        "write": { "type": "boolean" }
+      }
+    },
+    "workdir": { "type": "string" },
+    "workspace_root": { "type": "string" },
+    "review_mode": {
+      "type": "string",
+      "enum": ["packet_only", "packet_plus_workspace_read"]
+    },
+    "exploration_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_files_read": { "type": "integer", "minimum": 0 },
+        "max_searches": { "type": "integer", "minimum": 0 },
+        "max_lsp_queries": { "type": "integer", "minimum": 0 },
+        "max_extra_bytes": { "type": "integer", "minimum": 0 },
+        "max_duration_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "execution_profile": { "type": "string" },
+    "profile_fingerprint": { "type": "string" },
+    "model_selection_version": { "type": "string" },
+    "runtime_options": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

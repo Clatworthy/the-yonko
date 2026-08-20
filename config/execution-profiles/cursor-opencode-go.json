@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "id": "cursor-opencode-go",
+  "display_name": "Cursor + OpenCode Go",
+  "status": "experimental",
+  "description": "Chair Auto + Shanks Grok on Cursor; Blackbeard DeepSeek V4 Flash + Buggy GPT-5.6 Luna + Luffy Qwen 3.7 Plus on OpenCode Go (each OpenCode seat via Cursor Task wrapper). Model IDs live in config/model-selections.json.",
+  "fallback_policy": "none",
+  "requires_runtimes": [
+    "cursor",
+    "opencode"
+  ],
+  "cost_note": "OpenCode Go does not consume Cursor external API credits. Cursor Auto is variable; Luna is the guaranteed GPT-family reviewer.",
+  "model_selection_panel": "cursor-opencode-go",
+  "seat_ladder": [
+    "chair",
+    "shanks",
+    "blackbeard",
+    "buggy",
+    "luffy"
+  ],
+  "seats": {
+    "chair": {
+      "runtime": "cursor",
+      "read_only": false,
+      "notes": "Cursor Auto (orchestration). Model id from model-selections panel."
+    },
+    "shanks": {
+      "runtime": "cursor",
+      "read_only": false,
+      "notes": "Cursor Grok. Model id from model-selections panel."
+    },
+    "blackbeard": {
+      "runtime": "opencode",
+      "timeout_sec": 600,
+      "read_only": true,
+      "review_mode": "packet_plus_workspace_read",
+      "notes": "DeepSeek V4 Flash via model-selections (Pro is alternate). Chair seats via Cursor Task wrapper; Task runs invoke-seat --execute."
+    },
+    "buggy": {
+      "runtime": "opencode",
+      "timeout_sec": 600,
+      "read_only": true,
+      "review_mode": "packet_plus_workspace_read",
+      "notes": "GPT-5.6 Luna via model-selections. Cursor Task wrapper + invoke-seat --execute."
+    },
+    "luffy": {
+      "runtime": "opencode",
+      "timeout_sec": 600,
+      "read_only": true,
+      "review_mode": "packet_plus_workspace_read",
+      "notes": "Qwen 3.7 Plus via model-selections (distinct provider). Cursor Task wrapper + invoke-seat --execute. Fail closed if unavailable."
+    }
+  }
+}
